@@ -32,14 +32,9 @@ public class RectifierGUIController implements Initializable {
     @FXML
     public TextField filePathTextField;
 
-    @FXML
     private File selectedFile;
-
-    @FXML
     private final FileChooser fileChooser = new FileChooser();
-
-    @FXML
-    private final Stage stage = new Stage();
+    private Stage stage = new Stage();
 
     @FXML
     public void onRectifyButtonClick() {
@@ -47,7 +42,7 @@ public class RectifierGUIController implements Initializable {
     }
 
     @FXML
-    public void onBrowseButtonClick(Stage stage) {
+    public void onBrowseButtonClick() {
         File tempFile;
         tempFile = fileChooser.showOpenDialog(stage);
         if (tempFile != null) {
