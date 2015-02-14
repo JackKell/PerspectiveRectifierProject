@@ -2,19 +2,18 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class RectifierGUIController implements Initializable {
+
+	private Parent root;
 
     @FXML
     public javafx.scene.image.ImageView originalImageView;
@@ -36,7 +35,11 @@ public class RectifierGUIController implements Initializable {
 
     private File selectedFile;
     private final FileChooser fileChooser = new FileChooser();
-    private Stage stage = new Stage();
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+
+	}
 
     @FXML
     public void onRectifyButtonClick() {
@@ -84,8 +87,7 @@ public class RectifierGUIController implements Initializable {
 	}
     */
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
+	public void setParent(Parent parent) {
+		root = parent;
+	}
 }
