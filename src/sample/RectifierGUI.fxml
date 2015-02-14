@@ -10,11 +10,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.RectifierGUIController">
    <children>
-      <ImageView blendMode="BLUE" fitHeight="227.0" fitWidth="281.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="227.0" fitWidth="281.0" layoutX="305.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="103.0" layoutY="304.0" mnemonicParsing="false" text="Button" />
+      <ImageView fx:id="originalImageView" blendMode="BLUE" fitHeight="227.0" fitWidth="281.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="rectifiedImageView" fitHeight="227.0" fitWidth="281.0" layoutX="305.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="browseButton" layoutX="255.0" layoutY="336.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" text="Browse..." />
+      <TextField fx:id="filePathTextField" layoutX="106.0" layoutY="336.0" promptText="//File Path" />
+      <Button fx:id="loadButton" layoutX="14.0" layoutY="336.0" mnemonicParsing="false" text="Load Image" />
+      <Button fx:id="rectifyButton" layoutX="394.0" layoutY="336.0" mnemonicParsing="false" onAction="#onRectifyButtonClick" text="Rectify Image" />
    </children>
 </AnchorPane>
