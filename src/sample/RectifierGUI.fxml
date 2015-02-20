@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
@@ -12,11 +13,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="942.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.RectifierGUIController">
    <children>
-      <ImageView fx:id="originalImageView" fitHeight="540.0" fitWidth="400.0" layoutX="23.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="rectifiedImageView" fitHeight="540.0" fitWidth="400.0" layoutX="524.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="originalImageView" fitHeight="540.0" fitWidth="400.0" layoutX="14.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="rectifiedImageView" fitHeight="540.0" fitWidth="400.0" layoutX="528.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="browseButton" layoutX="23.0" layoutY="596.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" text="Browse..." />
       <TextField fx:id="filePathTextField" layoutX="23.0" layoutY="638.0" prefHeight="25.0" prefWidth="901.0" promptText="//File Path" />
       <Button fx:id="loadButton" layoutX="122.0" layoutY="596.0" mnemonicParsing="false" onAction="#onLoadButtonClick" prefHeight="25.0" prefWidth="98.0" text="Load Image" />
-      <Button fx:id="rectifyButton" layoutX="427.0" layoutY="272.0" mnemonicParsing="false" onAction="#onRectifyButtonClick" text="Rectify Image" />
+      <Button fx:id="rectifyButton" layoutX="427.0" layoutY="275.0" mnemonicParsing="false" onAction="#onRectifyButtonClick" text="Rectify Image" />
+      <Button fx:id="exportButton" layoutX="826.0" layoutY="596.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="98.0" text="Export Image" />
+      <TextField fx:id="exportFileNameTextField" layoutX="662.0" layoutY="596.0" promptText="Exported Filename" text="imageFile" />
    </children>
 </AnchorPane>
