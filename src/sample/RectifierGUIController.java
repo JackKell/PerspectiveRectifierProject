@@ -5,10 +5,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.*;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-
-import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
 
 import java.io.File;
 import java.net.URL;
@@ -24,7 +23,7 @@ public class RectifierGUIController implements Initializable {
 
     @FXML
     public ImageView rectifiedImageView;
-    private Image rectifitedImage;
+    private WritableImage rectifiedImage;
 
     @FXML
     public Button rectifyButton;
@@ -77,7 +76,28 @@ public class RectifierGUIController implements Initializable {
 
     @FXML
     public void onRectifyButtonClick() {
-        rectifiedImageView.setImage(originalImage);
+        PixelReader reader = originalImage.getPixelReader();
+        int width = (int)originalImage.getWidth();
+        int height = (int)originalImage.getHeight();
+
+        rectifiedImage = new WritableImage(width, height);
+        PixelWriter writer = rectifiedImage.getPixelWriter();
+
+        
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Color trueColor = reader.getColor(x, y);
+                Color modColor = new Color(
+                        trueColor.getBlue(),
+                        trueColor.getRed(),
+                        trueColor.getGreen(),
+                        trueColor.getOpacity()
+                );
+                writer.setColor(x, y, modColor);
+            }
+        }
+        
+        rectifiedImageView.setImage(rectifiedImage);
     }
     
 	public void setParent(Parent parent) {
