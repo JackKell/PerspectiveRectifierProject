@@ -12,11 +12,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.RectifierGUIController">
    <children>
-      <ImageView fx:id="originalImageView" blendMode="BLUE" fitHeight="227.0" fitWidth="281.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="rectifiedImageView" fitHeight="227.0" fitWidth="281.0" layoutX="305.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="browseButton" layoutX="255.0" layoutY="336.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" text="Browse..." />
-      <TextField fx:id="filePathTextField" layoutX="106.0" layoutY="336.0" promptText="//File Path" />
-      <Button fx:id="loadButton" layoutX="14.0" layoutY="336.0" mnemonicParsing="false" text="Load Image" />
-      <Button fx:id="rectifyButton" layoutX="394.0" layoutY="336.0" mnemonicParsing="false" onAction="#onRectifyButtonClick" text="Rectify Image" />
+      <ImageView fx:id="originalImageView" fitHeight="227.0" fitWidth="281.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="159.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="305.0" AnchorPane.topAnchor="14.0" />
+      <ImageView fx:id="rectifiedImageView" fitHeight="227.0" fitWidth="281.0" layoutX="305.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="159.0" AnchorPane.leftAnchor="305.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+      <Button fx:id="browseButton" layoutX="14.0" layoutY="303.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" prefHeight="25.0" prefWidth="68.0" text="Browse..." AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="518.0" />
+      <TextField fx:id="filePathTextField" layoutX="14.0" layoutY="345.0" prefHeight="25.0" prefWidth="573.0" promptText="//File Path" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="345.0" />
+      <Button fx:id="loadButton" layoutX="113.0" layoutY="303.0" mnemonicParsing="false" onAction="#onLoadButtonClick" prefHeight="25.0" prefWidth="98.0" text="Load Image" AnchorPane.bottomAnchor="72.0" AnchorPane.leftAnchor="113.0" AnchorPane.rightAnchor="389.0" AnchorPane.topAnchor="303.0" />
+      <Button fx:id="rectifyButton" layoutX="402.0" layoutY="303.0" mnemonicParsing="false" onAction="#onRectifyButtonClick" text="Rectify Image" />
    </children>
 </AnchorPane>
