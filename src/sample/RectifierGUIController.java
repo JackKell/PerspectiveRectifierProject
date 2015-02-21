@@ -6,8 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.*;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 public class RectifierGUIController implements Initializable {
@@ -44,10 +43,6 @@ public class RectifierGUIController implements Initializable {
     @FXML
     public TextField exportFileNameTextField;
 
-    private File selectedFile;
-    
-    
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -68,13 +63,12 @@ public class RectifierGUIController implements Initializable {
             return;
         }
 
-        selectedFile = file;
-        filePathTextField.setText(selectedFile.getPath());
-        loadImage();
+        filePathTextField.setText(file.getPath());
+        loadImage(file);
     }
 
-    private void loadImage() {
-        Main.setRectifiedImage(new Image(selectedFile.toURI().toString()));
+    private void loadImage(File file) {
+        Main.setRectifiedImage(new Image(file.toURI().toString()));
         originalImageView.setImage(Main.getRectifiedImage().getOriginalImage());
     }
 
