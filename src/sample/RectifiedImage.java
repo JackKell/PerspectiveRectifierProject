@@ -12,7 +12,8 @@ public class RectifiedImage {
 
     public enum RectifyMode {
         MIRROR,
-        RANDOM_COLOR
+        RANDOM_COLOR,
+        TINTED_GREEN
     }
 
     private Image image;
@@ -34,6 +35,8 @@ public class RectifiedImage {
                 return getMirror();
             case RANDOM_COLOR:
                 return getRandomColored();
+            case TINTED_GREEN:
+                return getTintedGreen();
             default:
                 return getWritableImage();
         }
@@ -71,6 +74,28 @@ public class RectifiedImage {
                         new Random().nextDouble() * 1,
                         new Random().nextDouble() * 1,
                         new Random().nextDouble() * 1,
+                        trueColor.getOpacity()
+                );
+                writer.setColor(x, y, modColor);
+            }
+        }
+        return writableImage;
+    }
+
+    private WritableImage getTintedGreen() {
+        PixelReader reader = image.getPixelReader();
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        PixelWriter writer = writableImage.getPixelWriter();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                //Mod Color can be used to change true color to a different value if need be
+                Color trueColor = reader.getColor(x, y);
+                Color modColor = new Color(
+                        trueColor.getRed() * .5,
+                        trueColor.getGreen() * 1,
+                        trueColor.getBlue() * .5,
                         trueColor.getOpacity()
                 );
                 writer.setColor(x, y, modColor);
