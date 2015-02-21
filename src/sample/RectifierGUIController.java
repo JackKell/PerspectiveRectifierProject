@@ -25,20 +25,15 @@ public class RectifierGUIController implements Initializable {
 
     @FXML
     public ImageView originalImageView;
-    private Image originalImage;
 
     @FXML
     public ImageView rectifiedImageView;
-    private WritableImage rectifiedImage;
 
     @FXML
     public Button rectifyButton;
 
     @FXML
     public Button browseButton;
-
-    @FXML
-    public Button loadButton;
     
     @FXML
     public Button exportButton;
@@ -68,64 +63,41 @@ public class RectifierGUIController implements Initializable {
                 new FileChooser.ExtensionFilter("JPEG File", "*jpeg")
         );
 
-        File file = fileChooser.showOpenDialog(root.getScene().getWindow()); //showOpenMultipleDialog(root.getScene().getWindow());
-
+        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
         if (file == null) {
             return;
         }
 
         selectedFile = file;
-
         filePathTextField.setText(selectedFile.getPath());
+        loadImage();
     }
 
-    @FXML
-    public void onLoadButtonClick() {
-        originalImage = new Image(selectedFile.toURI().toString());
-        originalImageView.setImage(originalImage);
+    private void loadImage() {
+        Main.setRectifiedImage(new Image(selectedFile.toURI().toString()));
+        originalImageView.setImage(Main.getRectifiedImage().getOriginalImage());
     }
 
     @FXML
     public void onRectifyButtonClick() {
-        PixelReader reader = originalImage.getPixelReader();
-        int width = (int)originalImage.getWidth();
-        int height = (int)originalImage.getHeight();
-
-        rectifiedImage = new WritableImage(width, height);
-        PixelWriter writer = rectifiedImage.getPixelWriter();
-
-        
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Color trueColor = reader.getColor(x, y);
-                //Mod Color can be used to change true color to a different value if need be
-                Color modColor = new Color(
-                        new Random().nextDouble() * 1,
-                        new Random().nextDouble() * 1,
-                        new Random().nextDouble() * 1,
-                        trueColor.getOpacity()
-                );
-                if (y < (height) /2) {
-                    writer.setColor(x, y, trueColor);
-                    writer.setColor(x, height - 1 - y, trueColor);
-                }
-            }
-        }
-        rectifiedImageView.setImage(rectifiedImage);
+        RectifiedImage image = Main.getRectifiedImage();
+        rectifiedImageView.setImage(image.getModifiedImage());
     }
 
     @FXML
     public void onExportButtonClick() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
-        
-        System.out.println(selectedDirectory.getAbsolutePath());
-        
-        File outputDirectory = new File(selectedDirectory.getPath() + File.separator + exportFileNameTextField.getText() +  ".png");
 
+        // The directory the dialog opens with
+        File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
+        System.out.println(selectedDirectory.getAbsolutePath());
+
+        // The directory the user chooses to save the file
+        File outputDirectory = new File(selectedDirectory.getPath() + File.separator + exportFileNameTextField.getText() +  ".png");
         System.out.println(outputDirectory.getAbsolutePath());
 
-        BufferedImage bImage = SwingFXUtils.fromFXImage(rectifiedImage, null);
+        // Saves the image in the output directory
+        BufferedImage bImage = SwingFXUtils.fromFXImage(Main.getRectifiedImage().getModifiedImage(), null);
         try {
             ImageIO.write(bImage, "png", outputDirectory);
         }

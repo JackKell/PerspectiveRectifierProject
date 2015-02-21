@@ -27,7 +27,11 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static RectifiedImage getImage() {
+    public static RectifiedImage getRectifiedImage() {
         return image;
+    }
+
+    public static void setRectifiedImage(Image image) {
+        Main.image = new RectifiedImage(image);
     }
 }

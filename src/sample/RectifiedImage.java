@@ -30,18 +30,17 @@ public class RectifiedImage {
     }
 
     public WritableImage getModifiedImage() {
-
         switch(mode) {
             case MIRROR:
-                return mirror();
+                return getMirror();
             case RANDOM_COLOR:
-                return randomColor();
+                return getRandomColored();
             default:
                 return getWritableImage();
         }
     }
 
-    private WritableImage mirror() {
+    private WritableImage getMirror() {
         PixelReader reader = image.getPixelReader();
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
@@ -59,7 +58,7 @@ public class RectifiedImage {
         return writableImage;
     }
 
-    private WritableImage randomColor() {
+    private WritableImage getRandomColored() {
         PixelReader reader = image.getPixelReader();
         int width = (int) image.getWidth();
         int height = (int) image.getHeight();
@@ -86,5 +85,9 @@ public class RectifiedImage {
         int height = (int) image.getHeight();
         writableImage = new WritableImage(width, height);
         return writableImage;
+    }
+
+    public Image getOriginalImage() {
+        return image;
     }
 }
