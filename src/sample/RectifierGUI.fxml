@@ -20,5 +20,6 @@
       <Button fx:id="rectifyButton" layoutX="427.0" layoutY="275.0" mnemonicParsing="false" onAction="#onRectifyButtonClick" text="Rectify Image" />
       <Button fx:id="exportButton" layoutX="824.0" layoutY="654.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="98.0" text="Export Image" />
       <TextField fx:id="exportFileNameTextField" layoutX="21.0" layoutY="654.0" prefHeight="25.0" prefWidth="792.0" promptText="Exported Filename" text="rectifiedImage" />
+      <ChoiceBox fx:id="choiceBox" layoutX="427.0" layoutY="322.0" prefHeight="25.0" prefWidth="88.0" />
    </children>
 </AnchorPane>

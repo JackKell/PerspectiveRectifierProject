@@ -22,7 +22,6 @@ public class RectifiedImage {
     public RectifiedImage(Image image) {
         this.image = image;
         writableImage = getWritableImage();
-        mode = RectifyMode.MIRROR;
     }
 
     public void setRectifyMode(RectifyMode mode) {

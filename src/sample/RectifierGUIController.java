@@ -1,10 +1,14 @@
 package sample;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,6 +33,9 @@ public class RectifierGUIController implements Initializable {
     public ImageView rectifiedImageView;
 
     @FXML
+    public ChoiceBox choiceBox;
+
+    @FXML
     public Button rectifyButton;
 
     @FXML
@@ -45,8 +52,14 @@ public class RectifierGUIController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-	}
+        choiceBox.setItems(FXCollections.observableArrayList(RectifiedImage.RectifyMode.values()));
+        choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                Main.getRectifiedImage().setRectifyMode(RectifiedImage.RectifyMode.values()[newValue.intValue()]);
+            }
+        });
+    }
 
     @FXML
      public void onBrowseButtonClick() {
@@ -98,6 +111,11 @@ public class RectifierGUIController implements Initializable {
         catch (IOException e) {
             System.out.println("Exception : " + e.getMessage());
         }
+    }
+
+    @FXML
+    public void onChoiceBoxClick() {
+       Main.getRectifiedImage().setRectifyMode((RectifiedImage.RectifyMode)choiceBox.getValue());
     }
     
 	public void setParent(Parent parent) {
