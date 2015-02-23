@@ -4,7 +4,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.geometry.Rectangle2D;
 
 public class Main extends Application {
 
@@ -23,8 +25,14 @@ public class Main extends Application {
 		controller.setParent(pane);
 
         primaryStage.setTitle("Image Rectifier");
-        primaryStage.setScene(new Scene(pane));
+        Scene scene = new Scene(pane);
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+        primaryStage.setMinWidth(primaryStage.getWidth());
+        primaryStage.setMinHeight(primaryStage.getHeight());
+        primaryStage.setMaxWidth(primaryStage.getWidth());
+        primaryStage.setMaxHeight(primaryStage.getHeight());
     }
 
     public static ImageRectifier getImageRectifier() {
