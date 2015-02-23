@@ -5,16 +5,16 @@ public class Matrix {
 	private int rows;
 	private int cols;
 
-	private float[] elements;
+	private double[] elements;
 
 	public Matrix(int rows, int cols) {
 		this.rows = rows;
 		this.cols = cols;
 
-		elements = new float[rows * cols];
+		elements = new double[rows * cols];
 	}
 
-	public Matrix(int rows, int cols, float[] elements) {
+	public Matrix(int rows, int cols, double[] elements) {
 		this(rows, cols);
 
 		if(rows * cols == elements.length) {
@@ -59,8 +59,8 @@ public class Matrix {
 		int elementNumb = 0;
 		for(int row = 0; row < rows; row++) {
 			for(int col = 0; col < matrixB.getCols(); col++) {
-				float[] rowArray = getRow(row + 1);
-				float[] colArray = matrixB.getCol(col + 1);
+                double[] rowArray = getRow(row + 1);
+                double[] colArray = matrixB.getCol(col + 1);
 				float sum = 0;
 
 				for(int i = 0; i < rowArray.length; i++) {
@@ -83,16 +83,16 @@ public class Matrix {
 		return rows;
 	}
 
-	public float[] getElements() {
+	public double[] getElements() {
 		return elements;
 	}
 
-	private float getElement(int row, int col) {
+	private double getElement(int row, int col) {
 		return elements[(row - 1) * cols + (col - 1)];
 	}
 
-	private float[] getRow(int row) {
-		float[] rowArray = new float[cols];
+	private double[] getRow(int row) {
+        double[] rowArray = new double[cols];
 
 		for(int i = 0; i < cols; i++) {
 			rowArray[i] = elements[(row - 1) * cols + i];
@@ -101,8 +101,8 @@ public class Matrix {
 		return rowArray;
 	}
 
-	private float[] getCol(int col) {
-		float[] colArray = new float[rows];
+	private double[] getCol(int col) {
+        double[] colArray = new double[rows];
 
 		for(int i = 0; i < rows; i++) {
 			colArray[i] = elements[i * cols + (col - 1)];

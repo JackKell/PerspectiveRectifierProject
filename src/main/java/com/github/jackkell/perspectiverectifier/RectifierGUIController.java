@@ -1,4 +1,4 @@
-package sample;
+package com.github.jackkell.perspectiverectifier;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -9,11 +9,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import util.MatrixSizeException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,6 +28,8 @@ import java.util.ResourceBundle;
 public class RectifierGUIController implements Initializable {
 
 	private Parent root;
+    private ImageRectifier.RectifyMode mode;
+    private double rotation;
 
     @FXML
     public ImageView originalImageView;
@@ -34,6 +39,9 @@ public class RectifierGUIController implements Initializable {
 
     @FXML
     public ChoiceBox choiceBox;
+
+    @FXML
+    public Slider slider;
 
     @FXML
     public Button rectifyButton;
@@ -52,17 +60,29 @@ public class RectifierGUIController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-        choiceBox.setItems(FXCollections.observableArrayList(RectifiedImage.RectifyMode.values()));
+        choiceBox.setItems(FXCollections.observableArrayList(ImageRectifier.RectifyMode.values()));
         choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                Main.getRectifiedImage().setRectifyMode(RectifiedImage.RectifyMode.values()[newValue.intValue()]);
+                mode = ImageRectifier.RectifyMode.values()[newValue.intValue()];
+                createRectifiedImage();
+                showRectifiedImage();
+            }
+        });
+
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                rotation = newValue.doubleValue();
+                createRectifiedImage();
+                showRectifiedImage();
             }
         });
     }
 
     @FXML
      public void onBrowseButtonClick() {
+        // Creates the file chooser for choosing an image
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select an Image File");
         fileChooser.getExtensionFilters().addAll(
@@ -71,28 +91,26 @@ public class RectifierGUIController implements Initializable {
                 new FileChooser.ExtensionFilter("JPEG File", "*jpeg")
         );
 
+        // Opens the file chooser and grabs the image the user selected
         File file = fileChooser.showOpenDialog(root.getScene().getWindow());
-        if (file == null) {
+        if (file == null)
             return;
-        }
 
+        // Saves the image in the program
+        Image originalImage = new Image(file.toURI().toString());
+        ImageRectifier imgRectifier = Main.getImageRectifier();
+        imgRectifier.setOriginalImage(originalImage);
+
+        // Shows the path text and saves the original image in the program
         filePathTextField.setText(file.getPath());
-        loadImage(file);
-    }
+        originalImageView.setImage(originalImage);
 
-    private void loadImage(File file) {
-        Main.setRectifiedImage(new Image(file.toURI().toString()));
-        originalImageView.setImage(Main.getRectifiedImage().getOriginalImage());
-    }
-
-    @FXML
-    public void onRectifyButtonClick() {
-        RectifiedImage image = Main.getRectifiedImage();
-        rectifiedImageView.setImage(image.getModifiedImage());
+        createRectifiedImage();
+        showRectifiedImage();
     }
 
     @FXML
-    public void onExportButtonClick() {
+    public void onExportButtonClick() throws MatrixSizeException {
         DirectoryChooser directoryChooser = new DirectoryChooser();
 
         // The directory the dialog opens with
@@ -104,7 +122,7 @@ public class RectifierGUIController implements Initializable {
         System.out.println(outputDirectory.getAbsolutePath());
 
         // Saves the image in the output directory
-        BufferedImage bImage = SwingFXUtils.fromFXImage(Main.getRectifiedImage().getModifiedImage(), null);
+        BufferedImage bImage = SwingFXUtils.fromFXImage(Main.getImageRectifier().getRectifiedImage(), null);
         try {
             ImageIO.write(bImage, "png", outputDirectory);
         }
@@ -113,11 +131,16 @@ public class RectifierGUIController implements Initializable {
         }
     }
 
-    @FXML
-    public void onChoiceBoxClick() {
-       Main.getRectifiedImage().setRectifyMode((RectifiedImage.RectifyMode)choiceBox.getValue());
+    private void createRectifiedImage() {
+        ImageRectifier imgRectifier = Main.getImageRectifier();
+        imgRectifier.create(mode, rotation);
     }
-    
+
+    private void showRectifiedImage() {
+        WritableImage rectifiedImage = Main.getImageRectifier().getRectifiedImage();
+        rectifiedImageView.setImage(rectifiedImage);
+    }
+
 	public void setParent(Parent parent) {
 		root = parent;
 	}
