@@ -5,6 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -16,14 +17,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import util.MatrixSizeException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RectifierGUIController implements Initializable {
 
@@ -102,7 +107,7 @@ public class RectifierGUIController implements Initializable {
         imgRectifier.setOriginalImage(originalImage);
 
         // Shows the path text and saves the original image in the program
-        filePathTextField.setText(file.getPath());
+       //filePathTextField.setText(file.getPath());
         originalImageView.setImage(originalImage);
 
         createRectifiedImage();
@@ -111,23 +116,29 @@ public class RectifierGUIController implements Initializable {
 
     @FXML
     public void onExportButtonClick() throws MatrixSizeException {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
+        //DirectoryChooser directoryChooser = new DirectoryChooser();
 
         // The directory the dialog opens with
-        File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
-        System.out.println(selectedDirectory.getAbsolutePath());
+        //File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
+        //System.out.println(selectedDirectory.getAbsolutePath());
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save As");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PNG File", "*.png"),
+                new FileChooser.ExtensionFilter("JPG File", "*.jpg"),
+                new FileChooser.ExtensionFilter("JPEG File", "*.jpeg"));
 
         // The directory the user chooses to save the file
-        File outputDirectory = new File(selectedDirectory.getPath() + File.separator + exportFileNameTextField.getText() +  ".png");
-        System.out.println(outputDirectory.getAbsolutePath());
+        File file = fileChooser.showSaveDialog(root.getScene().getWindow());
+        System.out.println(file.getAbsolutePath());
 
         // Saves the image in the output directory
         BufferedImage bImage = SwingFXUtils.fromFXImage(Main.getImageRectifier().getRectifiedImage(), null);
         try {
-            ImageIO.write(bImage, "png", outputDirectory);
+            ImageIO.write(bImage, "png", file);
         }
         catch (IOException e) {
-            System.out.println("Exception : " + e.getMessage());
+            Logger.getLogger(RectifierGUIController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 

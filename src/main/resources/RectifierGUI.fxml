@@ -12,10 +12,8 @@
    <children>
       <ImageView fx:id="originalImageView" fitHeight="540.0" fitWidth="400.0" layoutX="14.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="rectifiedImageView" fitHeight="540.0" fitWidth="400.0" layoutX="528.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="browseButton" layoutX="824.0" layoutY="621.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" prefHeight="25.0" prefWidth="98.0" text="Browse Image" />
-      <TextField fx:id="filePathTextField" layoutX="21.0" layoutY="621.0" prefHeight="25.0" prefWidth="792.0" promptText="File path to image..." />
-      <Button fx:id="exportButton" layoutX="824.0" layoutY="654.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="98.0" text="Export Image" />
-      <TextField fx:id="exportFileNameTextField" layoutX="21.0" layoutY="654.0" prefHeight="25.0" prefWidth="792.0" promptText="Exported Filename" text="rectifiedImage" />
+      <Button fx:id="browseButton" layoutX="329.0" layoutY="642.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" prefHeight="25.0" prefWidth="98.0" text="Browse Image" />
+      <Button fx:id="exportButton" layoutX="515.0" layoutY="642.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="98.0" text="Export Image" />
       <ChoiceBox fx:id="choiceBox" layoutX="427.0" layoutY="286.0" prefHeight="25.0" prefWidth="88.0" />
       <Slider fx:id="slider" layoutX="427.0" layoutY="339.0" majorTickUnit="359.0" max="359.0" minorTickCount="1" prefHeight="33.0" prefWidth="88.0" showTickLabels="true" />
    </children>
