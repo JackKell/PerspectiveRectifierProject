@@ -129,8 +129,8 @@ public class ImageRectifier {
         Matrix horizontalShear = new Matrix(2, 2, new double[] {1, 0, Math.sin(theta), 1});
         Matrix rotationMatrix = new Matrix(2, 2, new double[] {Math.cos(theta), Math.sin(theta), -Math.sin(theta), Math.cos(theta)});
 
-        double centerX = 117;
-        double centerY = 137;
+        double centerX = width / 2;
+        double centerY = height / 2;
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
