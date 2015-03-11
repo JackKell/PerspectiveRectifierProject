@@ -30,7 +30,7 @@ public class ImageRectifier {
     public void create(RectifyMode mode, double rotation) {
         if(originalImage == null)
             return;
-
+        
         clear();
 
         if(mode == RectifyMode.MIRROR)

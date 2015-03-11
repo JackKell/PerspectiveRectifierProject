@@ -15,13 +15,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import util.MatrixSizeException;
 
 import javax.imageio.ImageIO;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.beans.EventHandler;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,33 +38,17 @@ public class RectifierGUIController implements Initializable {
 	private Parent root;
     private ImageRectifier.RectifyMode mode;
     private double rotation;
+    private ImageViewDraw canvas = new ImageViewDraw();
 
     @FXML
     public ImageView originalImageView;
-
-    @FXML
     public ImageView rectifiedImageView;
-
-    @FXML
     public ChoiceBox choiceBox;
-
-    @FXML
     public Slider slider;
-
-    @FXML
-    public Button rectifyButton;
-
-    @FXML
     public Button browseButton;
-    
-    @FXML
-    public Button exportButton;
-
-    @FXML
     public TextField filePathTextField;
-    
-    @FXML
     public TextField exportFileNameTextField;
+    public Button rectifyButton;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -112,6 +99,7 @@ public class RectifierGUIController implements Initializable {
 
         createRectifiedImage();
         showRectifiedImage();
+        canvas.start(originalImageView, (AnchorPane) originalImageView.getParent());
     }
 
     @FXML
@@ -130,15 +118,19 @@ public class RectifierGUIController implements Initializable {
 
         // The directory the user chooses to save the file
         File file = fileChooser.showSaveDialog(root.getScene().getWindow());
-        System.out.println(file.getAbsolutePath());
 
         // Saves the image in the output directory
-        BufferedImage bImage = SwingFXUtils.fromFXImage(Main.getImageRectifier().getRectifiedImage(), null);
-        try {
-            ImageIO.write(bImage, "png", file);
-        }
-        catch (IOException e) {
-            Logger.getLogger(RectifierGUIController.class.getName()).log(Level.SEVERE, null, e);
+        if(file != null) {
+            System.out.println(file.getAbsolutePath());
+
+            BufferedImage bImage = SwingFXUtils.fromFXImage(Main.getImageRectifier().getRectifiedImage(), null);
+            try {
+                ImageIO.write(bImage, "png", file);
+            }
+            catch (IOException e) {
+                Logger.getLogger(RectifierGUIController.class.getName()).log(Level.SEVERE, null, e);
+            }
+
         }
     }
 
