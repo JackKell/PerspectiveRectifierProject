@@ -22,13 +22,14 @@ import java.util.Map.Entry;
  */
 public class ImageViewDraw {
 
-    double initX;
-    double initY;
+    /*double initX;
+    double initY;*/
+
+    // number of line objects drawn
+    private int lines = 0;
 
     public void start(ImageView canvas) {
 
-        // number of line objects drawn
-        int lines = 0;
 
         for (int child = 0; child < canvas.getParent().getChildrenUnmodifiable().size(); child++) {
             if(canvas.getParent().getChildrenUnmodifiable().get(child).getClass() == (new Line()).getClass()) {
@@ -139,5 +140,6 @@ public class ImageViewDraw {
                 }
             }
         } while(lines);
+        this.lines = 0;
     }
 }

@@ -46,9 +46,12 @@ public class RectifierGUIController implements Initializable {
     public ChoiceBox choiceBox;
     public Slider slider;
     public Button browseButton;
+    public Button exportButton;
+    public Button clearButton;
+    public Button rectifyButton;
     public TextField filePathTextField;
     public TextField exportFileNameTextField;
-    public Button rectifyButton;
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -133,6 +136,12 @@ public class RectifierGUIController implements Initializable {
             }
 
         }
+    }
+
+    @FXML
+    public void onClearButtonClick() {
+        canvas.removeLines(originalImageView);
+        canvas.start(originalImageView);
     }
 
     private void createRectifiedImage() {

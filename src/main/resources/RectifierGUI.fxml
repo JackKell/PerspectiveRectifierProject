@@ -14,6 +14,7 @@
       <ImageView fx:id="rectifiedImageView" fitHeight="540.0" fitWidth="400.0" layoutX="528.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="browseButton" layoutX="329.0" layoutY="642.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" prefHeight="25.0" prefWidth="98.0" text="Browse Image" />
       <Button fx:id="exportButton" layoutX="515.0" layoutY="642.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="98.0" text="Export Image" />
+      <Button fx:id="clearButton" layoutX="181.0" layoutY="573.0" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="25.0" prefWidth="98.0" text="Clear" />
       <ChoiceBox fx:id="choiceBox" layoutX="427.0" layoutY="286.0" prefHeight="25.0" prefWidth="88.0" />
       <Slider fx:id="slider" layoutX="427.0" layoutY="339.0" majorTickUnit="359.0" max="359.0" minorTickCount="1" prefHeight="33.0" prefWidth="88.0" showTickLabels="true" />
    </children>
