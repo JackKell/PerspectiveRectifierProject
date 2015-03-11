@@ -99,7 +99,8 @@ public class RectifierGUIController implements Initializable {
 
         createRectifiedImage();
         showRectifiedImage();
-        canvas.start(originalImageView, (AnchorPane) originalImageView.getParent());
+        canvas.removeLines(originalImageView);
+        canvas.start(originalImageView);
     }
 
     @FXML

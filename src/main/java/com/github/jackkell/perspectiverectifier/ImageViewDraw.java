@@ -25,9 +25,23 @@ public class ImageViewDraw {
     double initX;
     double initY;
 
-    public void start(ImageView canvas, AnchorPane anchorPane) {
+    public void start(ImageView canvas) {
 
-        final double minX = canvas.getLayoutX();
+        // number of line objects drawn
+        int lines = 0;
+
+        for (int child = 0; child < canvas.getParent().getChildrenUnmodifiable().size(); child++) {
+            if(canvas.getParent().getChildrenUnmodifiable().get(child).getClass() == (new Line()).getClass()) {
+                lines++;
+            }
+        }
+
+        if(lines >= 4) { return; }
+
+        //((AnchorPane)canvas.getParent()).getChildren().add(line);
+
+
+        /*final double minX = canvas.getLayoutX();
         final double minY = canvas.getLayoutY();
         double tempMaxX = canvas.getFitWidth() + minX;
         double tempMaxY = canvas.getFitHeight() + minY;
@@ -50,7 +64,7 @@ public class ImageViewDraw {
         }
 
         final double maxX = tempMaxX;
-        final double maxY = tempMaxY;
+        final double maxY = tempMaxY;*/
 
         Pair[] cornerPointsArray = new Pair[4];
 
@@ -67,7 +81,7 @@ public class ImageViewDraw {
                             line.setFill(Color.rgb(0,0,255));
                             line.setStroke(Color.rgb(0,0,255));
                             line.setStrokeWidth(1);
-                            anchorPane.getChildren().add(line);
+                            ((AnchorPane)canvas.getParent()).getChildren().add(line);
                         }
 
                         if(i == cornerPointsArray.length - 1) {
@@ -75,7 +89,7 @@ public class ImageViewDraw {
                             line.setFill(Color.rgb(0,0,255));
                             line.setStroke(Color.rgb(0,0,255));
                             line.setStrokeWidth(1);
-                            anchorPane.getChildren().add(line);
+                            ((AnchorPane)canvas.getParent()).getChildren().add(line);
                         }
 
                         break;
@@ -84,7 +98,7 @@ public class ImageViewDraw {
             }
         });
 
-        canvas.setOnMousePressed(new EventHandler<MouseEvent>() {
+        /*canvas.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 initX = mouseEvent.getSceneX();
@@ -110,6 +124,20 @@ public class ImageViewDraw {
                 initX = mouseEvent.getSceneX() > maxX ? maxX : mouseEvent.getSceneX();
                 initY = mouseEvent.getSceneY() > maxY ? maxY : mouseEvent.getSceneY();
             }
-        });
+        });*/
+    }
+
+    public void removeLines(ImageView canvas) {
+        boolean lines;
+
+        do {
+            lines = false;
+            for (int child = 0; child < canvas.getParent().getChildrenUnmodifiable().size(); child++) {
+                if (canvas.getParent().getChildrenUnmodifiable().get(child).getClass() == (new Line()).getClass()) {
+                    ((AnchorPane) canvas.getParent()).getChildren().remove(child);
+                    lines = true;
+                }
+            }
+        } while(lines);
     }
 }

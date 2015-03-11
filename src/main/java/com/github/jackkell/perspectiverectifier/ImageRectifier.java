@@ -13,6 +13,7 @@ import java.util.Random;
 public class ImageRectifier {
 
     public enum RectifyMode {
+        NONE,
         MIRROR,
         RANDOM_COLOR,
         TINTED_GREEN
