@@ -128,7 +128,7 @@ public class ImageRectifier {
 
         Matrix verticalShear = new Matrix(2, 2, new double[] {1, -Math.tan(theta/2), 0, 1});
         Matrix horizontalShear = new Matrix(2, 2, new double[] {1, 0, Math.sin(theta), 1});
-        Matrix rotationMatrix = new Matrix(2, 2, new double[] {Math.cos(theta), Math.sin(theta), -Math.sin(theta), Math.cos(theta)});
+        //Matrix rotationMatrix = new Matrix(2, 2, new double[] {Math.cos(theta), Math.sin(theta), -Math.sin(theta), Math.cos(theta)});
 
         double centerX = width / 2;
         double centerY = height / 2;
@@ -145,9 +145,10 @@ public class ImageRectifier {
                     transformedMatrix = verticalShear
                         .multiply(horizontalShear)
                         .multiply(verticalShear)
-                        .multiply(mat);
+                            .multiply(mat);
                 } catch (MatrixSizeException e) {
                     e.printStackTrace();
+                    System.out.println("We fucked up. " + e.getMessage());
                 }
                 double x1 = transformedMatrix.getElements()[0] + centerX;
                 double y1 = transformedMatrix.getElements()[1] + centerY;

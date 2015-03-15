@@ -65,6 +65,8 @@ public class RectifierGUIController implements Initializable {
             }
         });
 
+		choiceBox.getSelectionModel().select(ImageRectifier.RectifyMode.NONE);
+
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
