@@ -8,7 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="942.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.jackkell.perspectiverectifier.RectifierGUIController">
+<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="942.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.jackkell.perspectiverectifier.RectifierGUIController">
    <children>
       <ImageView fx:id="originalImageView" fitHeight="540.0" fitWidth="400.0" layoutX="14.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="rectifiedImageView" fitHeight="540.0" fitWidth="400.0" layoutX="528.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" />
