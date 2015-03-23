@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,6 +48,7 @@ public class RectifierGUIController implements Initializable {
     public ImageView originalImageView;
     public ImageView rectifiedImageView;
     public ChoiceBox choiceBox;
+	public ColorPicker cpColorPicker;
     public Slider slider;
     public Button browseButton;
     public Button exportButton;
@@ -66,6 +68,8 @@ public class RectifierGUIController implements Initializable {
 
 		choiceBox.getSelectionModel().select(ImageRectifier.RectifyMode.NONE);
 
+		cpColorPicker.setValue(Color.RED);
+
         slider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -83,7 +87,7 @@ public class RectifierGUIController implements Initializable {
 				}
 
 				if(cornerPointsArray[points] == null) {
-					cornerPointsArray[points] = new Pair(mouseEvent.getSceneX(), mouseEvent.getSceneY());
+					cornerPointsArray[points] = new Pair<>(mouseEvent.getSceneX(), mouseEvent.getSceneY());
 					System.out.println(cornerPointsArray[points].getX() + ", " + cornerPointsArray[points].getY());
 					points++;
 
@@ -102,9 +106,9 @@ public class RectifierGUIController implements Initializable {
     }
 
 	private Line getStyledLine(Line line) {
-		line.setFill(Color.rgb(0, 0, 255));
-		line.setStroke(Color.rgb(0, 0, 255));
-		line.setStrokeWidth(1);
+		line.setFill(cpColorPicker.getValue());
+		line.setStroke(cpColorPicker.getValue());
+		line.setStrokeWidth(3);
 		return line;
 	}
 
@@ -194,7 +198,7 @@ public class RectifierGUIController implements Initializable {
 
     private void createRectifiedImage() {
         ImageRectifier imgRectifier = Main.getImageRectifier();
-        imgRectifier.create(mode, rotation);
+        imgRectifier.create(mode, rotation, cornerPointsArray);
     }
 
     private void showRectifiedImage() {

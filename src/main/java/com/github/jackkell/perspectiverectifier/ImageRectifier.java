@@ -7,6 +7,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import util.Matrix;
 import util.MatrixSizeException;
+import util.Pair;
 
 import java.util.Random;
 
@@ -28,7 +29,7 @@ public class ImageRectifier {
         return rectifiedImage;
     }
 
-    public void create(RectifyMode mode, double rotation) {
+    public void create(RectifyMode mode, double rotation, Pair[] points) {
         if(originalImage == null)
             return;
         
@@ -42,6 +43,7 @@ public class ImageRectifier {
             tintGreen(rectifiedImage);
 
         rotate(rectifiedImage, rotation);
+		intersectingPoints(points);
     }
 
     private void mirror(WritableImage oldImage) {
@@ -162,6 +164,10 @@ public class ImageRectifier {
 
         rectifiedImage = newImage;
     }
+
+	private void intersectingPoints(Pair[] points) {
+
+	}
 
     private void clear() {
         PixelReader reader = originalImage.getPixelReader();
