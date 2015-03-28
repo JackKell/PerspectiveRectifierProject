@@ -24,6 +24,15 @@ public class Matrix {
 		}
 	}
 
+	public Matrix(Matrix matrix) {
+		this.rows = matrix.rows;
+		this.cols = matrix.cols;
+
+		for(int i = 0; i < matrix.elements.length; i++) {
+			this.elements[i] = matrix.elements[i];
+		}
+	}
+
 	public Matrix add(Matrix matrixB) throws MatrixSizeException {
 		if(rows != matrixB.getRows() || cols != matrixB.getCols()) {
 			throw new MatrixSizeException(MatrixSizeException.ADD_SUBTRACT_MESSAGE);
@@ -73,6 +82,33 @@ public class Matrix {
 		}
 
 		return productMatrix;
+	}
+
+	public Matrix solveSystem() {
+		for(int currRowIndex = 1; currRowIndex <= rows; currRowIndex++) {
+			//divide entire row by pivot value
+			double[] currRow = getRow(currRowIndex);
+			double pivot = currRow[currRowIndex - 1];
+
+			for(int rowElement = 0; rowElement < currRow.length; rowElement++) {
+				currRow[currRowIndex] /= pivot;
+			}
+
+			//make zeros under pivot
+			double multiple = 0;
+			for(int otherRowIndex = currRowIndex + 1; otherRowIndex <= rows; otherRowIndex++) {
+				double[] otherRow = getRow(otherRowIndex);
+				for(int rowElement = 0; rowElement < currRow.length; rowElement++) {
+					if(rowElement == 0) {
+						multiple = (-otherRow[rowElement] / currRow[rowElement]);
+					} else {
+						otherRow[rowElement] += currRow[rowElement] * multiple;
+					}
+				}
+			}
+		}
+
+		return new Matrix(rows, 1, this.getCol(cols));
 	}
 
 	public int getCols() {
