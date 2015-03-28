@@ -192,7 +192,8 @@ public class ImageRectifier {
 		System.out.println("BottomSlope: " + bottomSlope);
 		System.out.println("BottomIntercept: " + bottomIntercept);
 
-		Matrix system = new Matrix(2, 3, new double[] {-topSlope, 1, topIntercept, -bottomSlope, 1, bottomIntercept});
+		//Matrix system = new Matrix(2, 3, new double[] {-topSlope, 1, topIntercept, -bottomSlope, 1, bottomIntercept});
+        Matrix system = new Matrix(2, 3, new double[] {topSlope, -1, -topIntercept, bottomSlope, -1, -bottomIntercept});
 		Matrix solution = system.solveSystem();
 		System.out.println("Intersection X: " + solution.getElements()[0] + " Y: " + solution.getElements()[1]);
 	}

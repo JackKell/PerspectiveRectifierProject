@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Window;
 
-public class Main extends Application {
+public class Main extends Application { // work on retrieving the pixels contained by the lines made by the ImageViewDraw (combine lines?, create polygon?)
 
     private static ImageRectifier imageRectifier;
 

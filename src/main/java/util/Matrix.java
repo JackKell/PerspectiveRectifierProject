@@ -27,6 +27,7 @@ public class Matrix {
 	public Matrix(Matrix matrix) {
 		this.rows = matrix.rows;
 		this.cols = matrix.cols;
+		elements = new double[rows * cols];
 
 		for(int i = 0; i < matrix.elements.length; i++) {
 			this.elements[i] = matrix.elements[i];
@@ -85,13 +86,17 @@ public class Matrix {
 	}
 
 	public Matrix solveSystem() {
+		Matrix solution = new Matrix(this);
+
+		// find our pivot points in our matrix and balance our equation to set pivots to equal 1
 		for(int currRowIndex = 1; currRowIndex <= rows; currRowIndex++) {
 			//divide entire row by pivot value
-			double[] currRow = getRow(currRowIndex);
+			double[] currRow = solution.getRow(currRowIndex);
 			double pivot = currRow[currRowIndex - 1];
 
 			for(int rowElement = 0; rowElement < currRow.length; rowElement++) {
-				currRow[currRowIndex] /= pivot;
+				currRow[rowElement] /= pivot;
+				solution.elements[rowElement + currRow.length * (currRowIndex - 1)] /= pivot; // trust me it works - nate
 			}
 
 			//make zeros under pivot
@@ -99,16 +104,31 @@ public class Matrix {
 			for(int otherRowIndex = currRowIndex + 1; otherRowIndex <= rows; otherRowIndex++) {
 				double[] otherRow = getRow(otherRowIndex);
 				for(int rowElement = 0; rowElement < currRow.length; rowElement++) {
-					if(rowElement == 0) {
+					if (rowElement == 0) {
+						//if(currRow[rowElement] == 0) { break; }
 						multiple = (-otherRow[rowElement] / currRow[rowElement]);
-					} else {
-						otherRow[rowElement] += currRow[rowElement] * multiple;
+					}
+					otherRow[rowElement] += currRow[rowElement] * multiple;
+					solution.elements[rowElement + currRowIndex * currRow.length] += currRow[rowElement] * multiple;
+				}
+			}
+
+			//make zeros above pivot if we've finished making zeros under pivot
+			if(currRowIndex == rows) {
+				for (int i = currRowIndex; i > 1 ; i--) {
+					currRow = solution.getRow(i);
+					for (int otherRowIndex = i - 1; otherRowIndex > 0 ; otherRowIndex--) {
+						double[] otherRow = solution.getRow(otherRowIndex);
+						//if(currRow[rowElement] == 0) { break; }
+						multiple = (-otherRow[i - 1] / currRow[i - 1]);
+						otherRow[i] += currRow[i - 1] * multiple;
+						solution.elements[i + otherRowIndex - 2] += currRow[i - 1] * multiple;
+						solution.elements[i + otherRowIndex - 1] += currRow[i] * multiple;
 					}
 				}
 			}
 		}
-
-		return new Matrix(rows, 1, this.getCol(cols));
+		return new Matrix(rows, 1, solution.getCol(cols));
 	}
 
 	public int getCols() {
