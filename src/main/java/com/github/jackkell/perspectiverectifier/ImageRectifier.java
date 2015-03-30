@@ -46,7 +46,7 @@ public class ImageRectifier {
             tintGreen(rectifiedImage);
 
         rotate(rectifiedImage, rotation);
-		intersectingPoints(points);
+        rectify(rectifiedImage, intersectingPoints(points));
     }
 
     private void mirror(WritableImage oldImage) {
@@ -168,9 +168,9 @@ public class ImageRectifier {
         rectifiedImage = newImage;
     }
 
-	private void intersectingPoints(Pair<Double, Double>[] points) {
+	public Pair<Double,Double> intersectingPoints(Pair<Double, Double>[] points) {
 		if(points[0] == null) {
-			return;
+			return null;
 		}
 
 		Line2D.Double topLine = new Line2D.Double(points[0].getX(), points[0].getY(), points[1].getX(), points[1].getY());
@@ -196,29 +196,49 @@ public class ImageRectifier {
         Matrix system = new Matrix(2, 3, new double[] {topSlope, -1, -topIntercept, bottomSlope, -1, -bottomIntercept});
 		Matrix solution = system.solveSystem();
 		System.out.println("Intersection X: " + solution.getElements()[0] + " Y: " + solution.getElements()[1]);
+        Pair<Double,Double> intersectionPoint = new Pair<Double, Double>(solution.getElements()[0], solution.getElements()[1]);
+        return intersectionPoint;
 	}
 
-	public Point2D.Double getIntersectionPoint(Line2D.Double line1, Line2D.Double line2) {
-		if (! line1.intersectsLine(line2) ) return null;
-		double px = line1.getX1(),
-				py = line1.getY1(),
-				rx = line1.getX2()-px,
-				ry = line1.getY2()-py;
-		double qx = line2.getX1(),
-				qy = line2.getY1(),
-				sx = line2.getX2()-qx,
-				sy = line2.getY2()-qy;
+    private void rectify(WritableImage oldImage, Pair<Double,Double> vanishingPoint) {
+        PixelReader reader = oldImage.getPixelReader();
+        int width = (int) oldImage.getWidth();
+        int height = (int) oldImage.getHeight();
 
-		double det = sx*ry - sy*rx;
-		if (det == 0) {
-			return null;
-		} else {
-			double z = (sx*(qy-py)+sy*(px-qx))/det;
-			if (z==0 ||  z==1) return null;  // intersection at end point!
-			return new Point2D.Double(
-					(double)(px+z*rx), (double)(py+z*ry));
-		}
-	}
+        WritableImage newImage = new WritableImage(width, height);
+        PixelWriter writer = newImage.getPixelWriter();
+
+        // p = parameter  // Xpf = xVanishPoint
+        double parameter = 1.0 / vanishingPoint.getX();
+
+        Matrix transformationMatrix = new Matrix(4, 4, new double[] {1, 0, 0, parameter, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Color pixelColor = reader.getColor(x, y);
+
+                Matrix pixelCoord = new Matrix(1,4, new double[] {x, y, 0, 1});
+                Matrix rectifiedMatrix = null;
+               try {
+                    rectifiedMatrix = pixelCoord
+                            .multiply(transformationMatrix);
+                } catch (MatrixSizeException e) {
+                    e.printStackTrace();
+                    System.out.println("We fucked up. " + e.getMessage());
+                }
+
+                double x1 = rectifiedMatrix.getElements()[0];
+                double y1 = rectifiedMatrix.getElements()[1];
+
+                if(x1 < 0 || y1 < 0 || x1 > oldImage.getWidth() || y1 > oldImage.getHeight())
+                    continue;
+
+                writer.setColor((int) x1, (int) y1, pixelColor);
+            }
+        }
+
+        rectifiedImage = newImage;
+    }
 
     private void clear() {
         PixelReader reader = originalImage.getPixelReader();

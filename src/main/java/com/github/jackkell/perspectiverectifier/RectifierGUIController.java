@@ -53,6 +53,7 @@ public class RectifierGUIController implements Initializable {
     public Button browseButton;
     public Button exportButton;
     public Button clearButton;
+	public Button rectifyButton;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -179,6 +180,11 @@ public class RectifierGUIController implements Initializable {
     public void onClearButtonClick() {
 		removeLines();
     }
+
+	@FXML
+	public void onRectifyButtonClick() {
+		createRectifiedImage();
+	}
 
 	private void removeLines() {
 		while(lines > 0) {
