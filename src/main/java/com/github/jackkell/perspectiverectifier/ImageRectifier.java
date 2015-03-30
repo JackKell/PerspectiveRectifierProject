@@ -46,7 +46,9 @@ public class ImageRectifier {
             tintGreen(rectifiedImage);
 
         rotate(rectifiedImage, rotation);
-        rectify(rectifiedImage, intersectingPoints(points));
+        if(points[0] != null) {
+            rectify(rectifiedImage, intersectingPoints(points), points);
+        }
     }
 
     private void mirror(WritableImage oldImage) {
@@ -200,7 +202,7 @@ public class ImageRectifier {
         return intersectionPoint;
 	}
 
-    private void rectify(WritableImage oldImage, Pair<Double,Double> vanishingPoint) {
+    private void rectify(WritableImage oldImage, Pair<Double,Double> vanishingPoint, Pair<Double, Double>[] points) {
         PixelReader reader = oldImage.getPixelReader();
         int width = (int) oldImage.getWidth();
         int height = (int) oldImage.getHeight();
@@ -208,8 +210,11 @@ public class ImageRectifier {
         WritableImage newImage = new WritableImage(width, height);
         PixelWriter writer = newImage.getPixelWriter();
 
-        // p = parameter  // Xpf = xVanishPoint
-        double parameter = 1.0 / vanishingPoint.getX();
+        double centerX = (Math.abs(points[1].getX() - points[0].getX())) / 2;
+        //double centerY = vanishingPoint.getY();
+
+        // p = parameter
+        double parameter = 1.0 / Math.abs(centerX - vanishingPoint.getX());
 
         Matrix transformationMatrix = new Matrix(4, 4, new double[] {1, 0, 0, parameter, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1});
 
@@ -219,20 +224,28 @@ public class ImageRectifier {
 
                 Matrix pixelCoord = new Matrix(1,4, new double[] {x, y, 0, 1});
                 Matrix rectifiedMatrix = null;
+
                try {
-                    rectifiedMatrix = pixelCoord
-                            .multiply(transformationMatrix);
+                   rectifiedMatrix = pixelCoord.multiply(transformationMatrix);
+
+                   for (int i = 0; i < rectifiedMatrix.getCols(); i++) {
+                       rectifiedMatrix.getElements()[i] /= rectifiedMatrix.getElements()[rectifiedMatrix.getCols() - 1];
+                   }
                 } catch (MatrixSizeException e) {
                     e.printStackTrace();
                     System.out.println("We fucked up. " + e.getMessage());
                 }
 
+                if(x == 150 && y == 200)
+                    System.out.println();
                 double x1 = rectifiedMatrix.getElements()[0];
                 double y1 = rectifiedMatrix.getElements()[1];
 
+                // checks to make sure x1 and y1 are within the image frame
                 if(x1 < 0 || y1 < 0 || x1 > oldImage.getWidth() || y1 > oldImage.getHeight())
                     continue;
 
+                // draws our new image
                 writer.setColor((int) x1, (int) y1, pixelColor);
             }
         }

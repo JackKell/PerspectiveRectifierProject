@@ -184,6 +184,7 @@ public class RectifierGUIController implements Initializable {
 	@FXML
 	public void onRectifyButtonClick() {
 		createRectifiedImage();
+		showRectifiedImage();
 	}
 
 	private void removeLines() {
