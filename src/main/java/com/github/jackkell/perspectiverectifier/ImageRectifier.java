@@ -233,7 +233,7 @@ public class ImageRectifier {
                    }
                 } catch (MatrixSizeException e) {
                     e.printStackTrace();
-                    System.out.println("We fucked up. " + e.getMessage());
+                    System.out.println(e.getMessage());
                 }
 
                 if(x == 150 && y == 200)
