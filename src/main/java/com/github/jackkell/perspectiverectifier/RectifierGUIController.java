@@ -24,6 +24,7 @@ import util.MatrixSizeException;
 import util.Pair;
 
 import javax.imageio.ImageIO;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class RectifierGUIController implements Initializable {
 	private Parent root;
     private ImageRectifier.RectifyMode mode;
     private double rotation;
-	private Pair[] cornerPointsArray = new Pair[4];
+	private Point2D[] cornerPointsArray = new Point2D.Double[4];
 	private int lines = 0;
 	private int points = 0;
 
@@ -59,13 +60,13 @@ public class RectifierGUIController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
         choiceBox.setItems(FXCollections.observableArrayList(ImageRectifier.RectifyMode.values()));
         choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                mode = ImageRectifier.RectifyMode.values()[newValue.intValue()];
-                createRectifiedImage();
-                showRectifiedImage();
-            }
-        });
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				mode = ImageRectifier.RectifyMode.values()[newValue.intValue()];
+				createRectifiedImage();
+				showRectifiedImage();
+			}
+		});
 
 		choiceBox.getSelectionModel().select(ImageRectifier.RectifyMode.NONE);
 
@@ -83,13 +84,13 @@ public class RectifierGUIController implements Initializable {
 		originalImageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
+				System.out.println(mouseEvent.getSceneX() + ", "  + mouseEvent.getSceneY());
 				if(lines >= 4) {
 					return;
 				}
 
 				if(cornerPointsArray[points] == null) {
-					cornerPointsArray[points] = new Pair<>(mouseEvent.getSceneX(), mouseEvent.getSceneY());
-					System.out.println(cornerPointsArray[points].getX() + ", " + cornerPointsArray[points].getY());
+					cornerPointsArray[points] = new Point2D.Double(mouseEvent.getSceneX() - originalImageView.getX(), mouseEvent.getSceneY() - originalImageView.getY());
 					points++;
 
 					if(points > 1) {

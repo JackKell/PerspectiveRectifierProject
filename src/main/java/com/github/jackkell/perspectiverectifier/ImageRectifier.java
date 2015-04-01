@@ -10,6 +10,7 @@ import util.Matrix;
 import util.MatrixSizeException;
 import util.Pair;
 
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Random;
@@ -32,20 +33,20 @@ public class ImageRectifier {
         return rectifiedImage;
     }
 
-    public void create(RectifyMode mode, double rotation, Pair[] points) {
+    public void create(RectifyMode mode, double rotation, Point2D[] points) {
         if(originalImage == null)
             return;
         
         clear();
 
-        if(mode == RectifyMode.MIRROR)
-            mirror(rectifiedImage);
-        if(mode == RectifyMode.RANDOM_COLOR)
-            staticfy(rectifiedImage);
-        if(mode == RectifyMode.TINTED_GREEN)
-            tintGreen(rectifiedImage);
+        //if(mode == RectifyMode.MIRROR)
+            //mirror(rectifiedImage);
+        //if(mode == RectifyMode.RANDOM_COLOR)
+            //staticfy(rectifiedImage);
+        //if(mode == RectifyMode.TINTED_GREEN)
+            //tintGreen(rectifiedImage);
 
-        rotate(rectifiedImage, rotation);
+        //rotate(rectifiedImage, rotation);
         if(points[0] != null) {
             rectify(rectifiedImage, intersectingPoints(points), points);
         }
@@ -170,7 +171,7 @@ public class ImageRectifier {
         rectifiedImage = newImage;
     }
 
-	public Pair<Double,Double> intersectingPoints(Pair<Double, Double>[] points) {
+	public Point2D intersectingPoints(Point2D[] points) {
 		if(points[0] == null) {
 			return null;
 		}
@@ -198,11 +199,12 @@ public class ImageRectifier {
         Matrix system = new Matrix(2, 3, new double[] {topSlope, -1, -topIntercept, bottomSlope, -1, -bottomIntercept});
 		Matrix solution = system.solveSystem();
 		System.out.println("Intersection X: " + solution.getElements()[0] + " Y: " + solution.getElements()[1]);
-        Pair<Double,Double> intersectionPoint = new Pair<Double, Double>(solution.getElements()[0], solution.getElements()[1]);
+        Point2D intersectionPoint = new Point2D.Double(solution.getElements()[0], solution.getElements()[1]);
+
         return intersectionPoint;
 	}
 
-    private void rectify(WritableImage oldImage, Pair<Double,Double> vanishingPoint, Pair<Double, Double>[] points) {
+    private void rectify(WritableImage oldImage, Point2D vanishingPoint, Point2D[] points) {
         PixelReader reader = oldImage.getPixelReader();
         int width = (int) oldImage.getWidth();
         int height = (int) oldImage.getHeight();
@@ -210,43 +212,46 @@ public class ImageRectifier {
         WritableImage newImage = new WritableImage(width, height);
         PixelWriter writer = newImage.getPixelWriter();
 
-        double centerX = (Math.abs(points[1].getX() - points[0].getX())) / 2;
-        //double centerY = vanishingPoint.getY();
+        double centerX =(points[1].getX() + points[0].getX()) / 2;
+		double centerY = vanishingPoint.getY();
+
+		Point2D originPrime = new Point2D.Double(centerX, centerY);
+		Point2D vanishingPointPrime = pointToPrime(originPrime, vanishingPoint);
 
         // p = parameter
-        double parameter = 1.0 / Math.abs(centerX - vanishingPoint.getX());
+        double parameter = 1.0 / vanishingPointPrime.getX();
 
-        Matrix transformationMatrix = new Matrix(4, 4, new double[] {1, 0, 0, parameter, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        Matrix transformationMatrix = new Matrix(4, 4, new double[] {1, 0, 0, parameter, 0, 1, 0, 0, 0, 0, 0, 0, 0, .1, 0, 1});
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Color pixelColor = reader.getColor(x, y);
+				Point2D originalPoint = new Point2D.Double(x, y);
 
-                Matrix pixelCoord = new Matrix(1,4, new double[] {x, y, 0, 1});
-                Matrix rectifiedMatrix = null;
+				Point2D pointPrime = pointToPrime(originPrime, originalPoint);
+                Matrix pixelCoord = new Matrix(1,4, new double[] {pointPrime.getX(), pointPrime.getY(), 0, 1});
+                Matrix newPixelCoord = null;
 
                try {
-                   rectifiedMatrix = pixelCoord.multiply(transformationMatrix);
+                   newPixelCoord = pixelCoord.multiply(transformationMatrix);
+				   double xCoord = newPixelCoord.getElements()[0];
+				   double yCoord = newPixelCoord.getElements()[1];
 
-                   for (int i = 0; i < rectifiedMatrix.getCols(); i++) {
-                       rectifiedMatrix.getElements()[i] /= rectifiedMatrix.getElements()[rectifiedMatrix.getCols() - 1];
-                   }
+				   newPixelCoord.getElements()[0] = xCoord / (xCoord * parameter + 1);
+				   newPixelCoord.getElements()[1] = yCoord / (xCoord * parameter + 1);
                 } catch (MatrixSizeException e) {
                     e.printStackTrace();
                     System.out.println(e.getMessage());
                 }
 
-                if(x == 150 && y == 200)
-                    System.out.println();
-                double x1 = rectifiedMatrix.getElements()[0];
-                double y1 = rectifiedMatrix.getElements()[1];
+				Point2D newPoint = primeToPoint(originPrime, new Point2D.Double(newPixelCoord.getElements()[0], newPixelCoord.getElements()[1]));
 
                 // checks to make sure x1 and y1 are within the image frame
-                if(x1 < 0 || y1 < 0 || x1 > oldImage.getWidth() || y1 > oldImage.getHeight())
+                if(newPoint.getX() < 0 || newPoint.getY() < 0 || newPoint.getX() > oldImage.getWidth() || newPoint.getY() > oldImage.getHeight())
                     continue;
 
                 // draws our new image
-                writer.setColor((int) x1, (int) y1, pixelColor);
+                writer.setColor((int) newPoint.getX(), (int) newPoint.getY(), pixelColor);
             }
         }
 
@@ -261,6 +266,14 @@ public class ImageRectifier {
         WritableImage newImage = new WritableImage(reader, width, height);
         rectifiedImage = newImage;
     }
+
+	private Point2D pointToPrime(Point2D origin, Point2D point) {
+		return new Point2D.Double(point.getX() - origin.getX(), point.getY() - origin.getY());
+	}
+
+	private Point2D primeToPoint(Point2D origin, Point2D point) {
+		return new Point2D.Double(point.getX() + origin.getX(), point.getY() + origin.getY());
+	}
 
     public Image getOriginalImage() {
         return originalImage;
