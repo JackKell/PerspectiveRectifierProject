@@ -3,18 +3,21 @@ package com.github.jackkell.perspectiverectifier;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Window;
 
-public class Main extends Application { // work on retrieving the pixels contained by the lines made by the ImageViewDraw (combine lines?, create polygon?)
+public class Main extends Application {
 
-    private static ImageRectifier imageRectifier;
+	private static Image originalImage;
+	private static RectifiedImage rectifiedImage;
 
     public static void main(String[] args) {
-        imageRectifier = new ImageRectifier();
+		originalImage = null;
+		rectifiedImage = null;
         launch(args);
     }
 
@@ -36,7 +39,19 @@ public class Main extends Application { // work on retrieving the pixels contain
         primaryStage.setMaxHeight(primaryStage.getHeight());
     }
 
-    public static ImageRectifier getImageRectifier() {
-        return Main.imageRectifier;
+	public static Image getOriginalImage() {
+		return Main.originalImage;
+	}
+
+	public static void setOriginalImage(Image originalImage) {
+		Main.originalImage = originalImage;
+	}
+
+    public static RectifiedImage getRectifiedImage() {
+        return Main.rectifiedImage;
     }
+
+	public static void setRectifiedImage(RectifiedImage rectifiedImage) {
+		Main.rectifiedImage = rectifiedImage;
+	}
 }
