@@ -7,7 +7,7 @@ import java.util.Arrays;
 import static org.junit.Assert.*;
 
 public class MatrixTest{
-
+	// Elementary Row Operations
 	@Test
 	public void multiplyTest() throws MatrixSizeException {
 		Matrix a = new Matrix(2, 2, new double[] {1, 0, 0, 1});
@@ -52,5 +52,16 @@ public class MatrixTest{
 		}
 
 		assertTrue(Arrays.equals(vectorX, expected));
+	}
+
+	@Test
+	public void solveSystemTest() throws MatrixSizeException {
+		Matrix a = new Matrix(2, 2, new double[] {2, 4, 3, 12});
+		double[] b = new double[] {16, 30};
+		double[] c = Matrix.solveSystem(a, b);
+
+		double[] expected = new double[] {6, 1};
+
+		assertTrue(Arrays.equals(c, expected));
 	}
 }

@@ -110,9 +110,9 @@ public class RectifierGUIController implements Initializable {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open");
 		fileChooser.getExtensionFilters().addAll(
-				new FileChooser.ExtensionFilter("JPG File", "*.jpg"),
-				new FileChooser.ExtensionFilter("PNG File", "*.png"),
-				new FileChooser.ExtensionFilter("JPEG File", "*jpeg")
+				new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.jpeg")
+				//new FileChooser.ExtensionFilter("PNG File", "*.png"),
+				//new FileChooser.ExtensionFilter("JPEG File", "*.jpeg")
 		);
 
 		// Opens the file chooser and grabs the image the user selected

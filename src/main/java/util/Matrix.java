@@ -145,50 +145,35 @@ public class Matrix {
 		return Matrix.LUFactorize(this, vectorB);
 	}
 
-	public Matrix solveSystem() {
-		Matrix solution = new Matrix(this);
+	public static double[] solveSystem(Matrix matrixA, double[] vectorB) throws MatrixSizeException {
+		if(vectorB.length != matrixA.rows) {
+			throw new MatrixSizeException("Vector x contains " + vectorB.length + " elements, and matrix A has " + matrixA.rows + " rows. An augmented matrix cannot be made.");
+		}
 
-		// find our pivot points in our matrix and balance our equation to set pivots to equal 1
-		for(int currRowIndex = 1; currRowIndex <= rows; currRowIndex++) {
-			//divide entire row by pivot value
-			double[] currRow = solution.getRow(currRowIndex);
-			double pivot = currRow[currRowIndex - 1];
+		Matrix augmentedA = matrixA.addColumn(vectorB);
 
-			for(int rowElement = 0; rowElement < currRow.length; rowElement++) {
-				currRow[rowElement] /= pivot;
-				solution.elements[rowElement + currRow.length * (currRowIndex - 1)] /= pivot; // trust me it works - nate
-			}
+		int shortestSide = augmentedA.rows <= augmentedA.cols ? augmentedA.rows : augmentedA.cols;
 
-			//make zeros under pivot
-			double multiple = 0;
-			for(int otherRowIndex = currRowIndex + 1; otherRowIndex <= rows; otherRowIndex++) {
-				double[] otherRow = getRow(otherRowIndex);
-				for(int rowElement = 0; rowElement < currRow.length; rowElement++) {
-					if (rowElement == 0) {
-						//if(currRow[rowElement] == 0) { break; }
-						multiple = (-otherRow[rowElement] / currRow[rowElement]);
-					}
-					otherRow[rowElement] += currRow[rowElement] * multiple;
-					solution.elements[rowElement + currRowIndex * currRow.length] += currRow[rowElement] * multiple;
-				}
-			}
 
-			//make zeros above pivot if we've finished making zeros under pivot
-			if(currRowIndex == rows) {
-				for (int i = currRowIndex; i > 1 ; i--) {
-					currRow = solution.getRow(i);
-					for (int otherRowIndex = i - 1; otherRowIndex > 0 ; otherRowIndex--) {
-						double[] otherRow = solution.getRow(otherRowIndex);
-						//if(currRow[rowElement] == 0) { break; }
-						multiple = (-otherRow[i - 1] / currRow[i - 1]);
-						otherRow[i] += currRow[i - 1] * multiple;
-						solution.elements[i + otherRowIndex - 2] += currRow[i - 1] * multiple;
-						solution.elements[i + otherRowIndex - 1] += currRow[i] * multiple;
-					}
-				}
+		for(int pivot = 0; pivot < shortestSide; pivot++) {
+			for(int i = 1 + pivot; i < shortestSide; i++) {
+				double modifier = augmentedA.getElement(i, pivot) / augmentedA.getElement(pivot, pivot);
+				augmentedA.addRows(i, i, -modifier, pivot);
 			}
 		}
-		return new Matrix(rows, 1, solution.getCol(cols));
+
+		for(int pivot = shortestSide - 1; pivot >= 0; pivot--) {
+			for(int i = pivot - 1; i >= 0; i--) {
+				double modifier = augmentedA.getElement(i, pivot) / augmentedA.getElement(pivot, pivot);
+				augmentedA.addRows(i, i, -modifier, pivot);
+			}
+		}
+
+		for(int pivot = 0; pivot < augmentedA.rows; pivot++) {
+			augmentedA.mutiplyRow(pivot, 1 / augmentedA.getElement(pivot, pivot));
+		}
+
+		return augmentedA.getCol(augmentedA.cols - 1);
 	}
 
 	public int getCols() {
