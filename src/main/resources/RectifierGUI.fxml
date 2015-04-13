@@ -16,9 +16,14 @@
       <Button fx:id="browseButton" layoutX="329.0" layoutY="642.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" prefHeight="25.0" prefWidth="98.0" text="Browse Image" />
       <Button fx:id="exportButton" layoutX="515.0" layoutY="642.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="98.0" text="Export Image" />
       <Button fx:id="clearButton" layoutX="181.0" layoutY="573.0" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="25.0" prefWidth="98.0" text="Clear" />
-      <ChoiceBox fx:id="choiceBox" layoutX="427.0" layoutY="286.0" prefHeight="25.0" prefWidth="88.0" />
-      <Slider fx:id="slider" layoutX="428.0" layoutY="385.0" majorTickUnit="359.0" max="359.0" minorTickCount="1" prefHeight="33.0" prefWidth="88.0" showTickLabels="true" />
-      <ColorPicker fx:id="cpColorPicker" layoutX="427.0" layoutY="334.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="88.0" />
+      <ChoiceBox fx:id="choiceBox" layoutX="427.0" layoutY="174.0" prefHeight="25.0" prefWidth="88.0" />
+      <Slider fx:id="slider" layoutX="428.0" layoutY="273.0" majorTickUnit="359.0" max="359.0" minorTickCount="1" prefHeight="33.0" prefWidth="88.0" showTickLabels="true" />
+      <ColorPicker fx:id="cpColorPicker" layoutX="427.0" layoutY="222.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="88.0" />
       <Button fx:id="rectifyButton" layoutX="437.0" layoutY="573.0" mnemonicParsing="false" onAction="#onRectifyButtonClick" text="RectifyMe" />
+      <TextField fx:id="txtVPX" layoutX="427.0" layoutY="321.0" prefHeight="25.0" prefWidth="88.0" promptText="VP X value" />
+      <TextField fx:id="txtShear" layoutX="427.0" layoutY="356.0" prefHeight="25.0" prefWidth="88.0" promptText="Shear value" />
+      <TextField fx:id="txtVerticalShift" layoutX="427.0" layoutY="392.0" prefHeight="25.0" prefWidth="88.0" promptText="Vertical Shift" />
+      <TextField fx:id="txtHorizontalShift" layoutX="427.0" layoutY="432.0" prefHeight="25.0" prefWidth="88.0" promptText="Horizontal Shift" />
+      <TextField fx:id="txtScale" layoutX="427.0" layoutY="470.0" prefHeight="25.0" prefWidth="88.0" promptText="Scale" />
    </children>
 </AnchorPane>

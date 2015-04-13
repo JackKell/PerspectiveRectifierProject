@@ -6,6 +6,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import util.Matrix;
 import util.MatrixSizeException;
 
@@ -16,6 +17,11 @@ public class RectifiedImage {
 	private final Point2D[] points; // Required
 	private final RectifiedImage.Mode mode;
 	private final double rotation;
+	private final double vpX;
+	private final double shear;
+	private final double verticalShift;
+	private final double horizontalShift;
+	private final double scale;
 
 	private final WritableImage rectifiedImage;
 
@@ -24,6 +30,11 @@ public class RectifiedImage {
 		this.points = builder.points;
 		this.mode = builder.mode;
 		this.rotation = builder.rotation;
+		this.vpX = builder.vpX;
+		this.shear = builder.shear;
+		this.verticalShift = builder.verticalShift;
+		this.horizontalShift = builder.horizontalShift;
+		this.scale = builder.scale;
 
 		rectifiedImage = createImage();
 	}
@@ -45,9 +56,9 @@ public class RectifiedImage {
 
 		newImage = rotate(newImage);
 
-		if(points[0] != null) {
+		//if(points[0] != null) {
 			newImage = changePerspective2(newImage);
-		}
+		//}
 
 		return newImage;
 	}
@@ -219,10 +230,10 @@ public class RectifiedImage {
 		WritableImage newImage = new WritableImage((int) width, (int) height);
 		PixelReader reader = image.getPixelReader();
 		PixelWriter writer = newImage.getPixelWriter();
-		
+
 		// We want to origin to be centered to make the math easier
 		Point2D origin = new Point2D.Double(width / 2.0, height / 2.0);
-		
+		/*
 		//Convert point coordinates so the origin is in the center of the image
 		Point2D[] offsetPoints = new Point2D.Double[points.length];
 		for(int i = 0; i < points.length; i++) {
@@ -233,11 +244,12 @@ public class RectifiedImage {
 		// This helps us get the elements for our matrix
 		double topSlope = (offsetPoints[1].getY() - offsetPoints[0].getY()) / (offsetPoints[1].getX() - offsetPoints[0].getX());
 		double bottomSlope = (offsetPoints[3].getY() - offsetPoints[2].getY()) / (offsetPoints[3].getX() - offsetPoints[2].getX());
+
 		double topYInt = offsetPoints[0].getY() + (offsetPoints[0].getX() * topSlope * -1);
-		double bottomYInt = offsetPoints[2].getY() + (offsetPoints[2].getX() * bottomSlope * -1);
+		double bottomYInt = offsetPoints[3].getY() + (offsetPoints[3].getX() * bottomSlope * -1);
 
 		// Once we solve the matrix, we have the point where the 2 lines intercept
-		Matrix matrixA = new Matrix(2, 2, new double[] {topSlope, 1, bottomSlope, 1});
+		Matrix matrixA = new Matrix(2, 2, new double[] {-topSlope, 1, -bottomSlope, 1});
 		double[] vectorB = new double[] {topYInt, bottomYInt};
 		double[] vectorX = null;
 		try {
@@ -246,12 +258,19 @@ public class RectifiedImage {
 			System.out.println("[ERROR changePerspective2_001]");
 			e.printStackTrace();
 		}
-		Point2D vanishingPoint = new Point2D.Double(vectorX[0], vectorX[1]);
+		*/
+		//Point2D vanishingPoint = new Point2D.Double(vectorX[0], vectorX[1]);
+		Point2D vanishingPoint = new Point2D.Double(vpX  + origin.getX(), 0);
 		System.out.println("VP: " + vanishingPoint.getX() + ", " + vanishingPoint.getY());
 
 		// Now it's time to transform the image
-		double parameter = -(1/vanishingPoint.getX());
-		Matrix transformation = new Matrix(4, 4, new double[] {1, 0, 0, parameter, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+		double parameter = (1/vanishingPoint.getX());
+		Matrix transformation = new Matrix(4, 4, new double[] {
+				1, shear, 0, parameter,
+				0, 1, 0, 0,
+				0, 0, 0, 0,
+				horizontalShift, verticalShift, 0, 1
+		});
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -265,10 +284,10 @@ public class RectifiedImage {
 					e.printStackTrace();
 				}
 
-				double x1 = newCoords[0] / newCoords[3];
-				double y1 = newCoords[1] / newCoords[3];
+				double x1 = (newCoords[0] / (newCoords[3] + scale));
+				double y1 = (newCoords[1] / (newCoords[3] + scale));
 
-				if(x1 < 0 || y1 < 0 || x1 > width || y1 > height)
+				if(x1 < 0 || y1 < 0 || x1 >= width || y1 >= height)
 					continue;
 
 				writer.setColor((int ) x1, (int) y1, trueColor);
@@ -283,6 +302,11 @@ public class RectifiedImage {
 		private Point2D[] points;
 		private RectifiedImage.Mode mode;
 		private double rotation;
+		private double vpX;
+		private double shear;
+		private double verticalShift;
+		private double horizontalShift;
+		private double scale;
 
 		public Builder(Image image) {
 			this.originalImage = image;
@@ -300,6 +324,31 @@ public class RectifiedImage {
 
 		public Builder rotation(double rotation) {
 			this.rotation = rotation;
+			return this;
+		}
+
+		public Builder vpX(double vpX) {
+			this.vpX = vpX;
+			return this;
+		}
+
+		public Builder shear(double shear) {
+			this.shear = shear;
+			return this;
+		}
+
+		public Builder verticalShift(double verticalShift) {
+			this.verticalShift = verticalShift;
+			return this;
+		}
+
+		public Builder horizontalShift(double horizontalShift) {
+			this.horizontalShift = horizontalShift;
+			return this;
+		}
+
+		public Builder scale(double scale) {
+			this.scale = scale;
 			return this;
 		}
 

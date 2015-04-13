@@ -8,10 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -52,6 +49,11 @@ public class RectifierGUIController implements Initializable {
     public Button exportButton;
     public Button clearButton;
 	public Button rectifyButton;
+	public TextField txtVPX;
+	public TextField txtShear;
+	public TextField txtVerticalShift;
+	public TextField txtHorizontalShift;
+	public TextField txtScale;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -203,8 +205,29 @@ public class RectifierGUIController implements Initializable {
 		RectifiedImage.Builder builder = new RectifiedImage.Builder(Main.getOriginalImage())
 			.rotation(rotation).mode(mode);
 
-		if(cornerPointsArray.length == 4)
+		if(!txtVPX.getText().equals("")) {
+			builder.vpX(Double.parseDouble(txtVPX.getText()));
+		}
+
+		if(!txtShear.getText().equals("")) {
+			builder.shear(Double.parseDouble(txtShear.getText()));
+		}
+
+		if(!txtVerticalShift.getText().equals("")) {
+			builder.verticalShift(Double.parseDouble(txtVerticalShift.getText()));
+		}
+
+		if(!txtHorizontalShift.getText().equals("")) {
+			builder.horizontalShift(Double.parseDouble(txtHorizontalShift.getText()));
+		}
+
+		if(!txtScale.getText().equals("")) {
+			builder.scale(Double.parseDouble(txtScale.getText()));
+		}
+
+		if(cornerPointsArray.length == 4) {
 			builder = builder.points(cornerPointsArray);
+		}
 
         Main.setRectifiedImage(builder.build());
     }

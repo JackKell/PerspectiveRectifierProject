@@ -154,7 +154,6 @@ public class Matrix {
 
 		int shortestSide = augmentedA.rows <= augmentedA.cols ? augmentedA.rows : augmentedA.cols;
 
-
 		for(int pivot = 0; pivot < shortestSide; pivot++) {
 			for(int i = 1 + pivot; i < shortestSide; i++) {
 				double modifier = augmentedA.getElement(i, pivot) / augmentedA.getElement(pivot, pivot);
