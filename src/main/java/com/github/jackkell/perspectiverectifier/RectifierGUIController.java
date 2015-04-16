@@ -42,62 +42,98 @@ public class RectifierGUIController implements Initializable {
 	public AnchorPane parentPane;
     public ImageView originalImageView;
     public ImageView rectifiedImageView;
-    public ChoiceBox choiceBox;
-	public ColorPicker cpColorPicker;
-    public Slider slider;
-    public Button browseButton;
-    public Button exportButton;
-    public Button clearButton;
-	public Button rectifyButton;
+
+    public Slider rotationSlider;
+	public Slider vanishingPointXSlider;
+	public Slider verticalShearSlider;
+	public Slider verticalShiftSlider;
+	public Slider horizontalShiftSlider;
+	public Slider scaleSlider;
+
+	public TextField txtRotation;
 	public TextField txtVPX;
 	public TextField txtShear;
 	public TextField txtVerticalShift;
 	public TextField txtHorizontalShift;
 	public TextField txtScale;
 
+    public Button browseButton;
+    public Button exportButton;
+
+	public ToggleButton mirrorToggleButton;
+	public ToggleButton rectifyToggleButton;
+
+
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-        choiceBox.setItems(FXCollections.observableArrayList(RectifiedImage.Mode.values()));
-		choiceBox.getSelectionModel().select(RectifiedImage.Mode.NONE);
 		mode = RectifiedImage.Mode.NONE;
-        choiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+        rotationSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				mode = RectifiedImage.Mode.values()[newValue.intValue()];
+				txtRotation.setText(Math.round(rotationSlider.getValue()) + "");
+				rotation = newValue.doubleValue();
 				createRectifiedImage();
 				showRectifiedImage();
 			}
 		});
 
-		cpColorPicker.setValue(Color.RED);
+		vanishingPointXSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				txtVPX.setText(vanishingPointXSlider.getValue() + "");
+			}
+		});
 
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                rotation = newValue.doubleValue();
-                createRectifiedImage();
-                showRectifiedImage();
-            }
-        });
+		verticalShearSlider.valueProperty().addListener((new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				txtShear.setText(verticalShearSlider.getValue() + "");
+			}
+		}));
+
+		verticalShiftSlider.valueProperty().addListener((new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				txtVerticalShift.setText(verticalShiftSlider.getValue() + "");
+			}
+		}));
+
+		horizontalShiftSlider.valueProperty().addListener((new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				txtHorizontalShift.setText(horizontalShiftSlider.getValue() + "");
+			}
+		}));
+
+		scaleSlider.valueProperty().addListener((new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				txtScale.setText(scaleSlider.getValue() + "");
+			}
+		}));
+
+
 
 		originalImageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent mouseEvent) {
-				System.out.println(mouseEvent.getSceneX() + ", "  + mouseEvent.getSceneY());
-				if(lines >= 4) {
+				System.out.println(mouseEvent.getSceneX() + ", " + mouseEvent.getSceneY());
+				if (lines >= 4) {
 					return;
 				}
 
-				if(cornerPointsArray[points] == null) {
+				if (cornerPointsArray[points] == null) {
 					cornerPointsArray[points] = new Point2D.Double(mouseEvent.getSceneX() - originalImageView.getX(), mouseEvent.getSceneY() - originalImageView.getY());
 					points++;
 
-					if(points > 1) {
+					if (points > 1) {
 						Line line = new Line(cornerPointsArray[points - 2].getX(), cornerPointsArray[points - 2].getY(), cornerPointsArray[points - 1].getX(), cornerPointsArray[points - 1].getY());
 						addLine(getStyledLine(line));
 					}
 
-					if(points == cornerPointsArray.length) {
+					if (points == cornerPointsArray.length) {
 						Line line = new Line(cornerPointsArray[0].getX(), cornerPointsArray[0].getY(), cornerPointsArray[points - 1].getX(), cornerPointsArray[points - 1].getY());
 						addLine(getStyledLine(line));
 					}
@@ -162,20 +198,7 @@ public class RectifierGUIController implements Initializable {
         }
     }
 
-    @FXML
-    public void onClearButtonClick() {
-		removeLines();
-    }
-
-	@FXML
-	public void onRectifyButtonClick() {
-		createRectifiedImage();
-		showRectifiedImage();
-	}
-
 	private Line getStyledLine(Line line) {
-		line.setFill(cpColorPicker.getValue());
-		line.setStroke(cpColorPicker.getValue());
 		line.setStrokeWidth(3);
 		return line;
 	}
