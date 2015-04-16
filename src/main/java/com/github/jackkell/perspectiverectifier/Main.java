@@ -29,6 +29,7 @@ public class Main extends Application {
 		controller.setParent(pane);
 
         primaryStage.setTitle("Image Rectifier");
+		primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/divide-64.png")));
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
         primaryStage.show();
