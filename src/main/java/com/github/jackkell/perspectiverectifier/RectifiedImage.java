@@ -153,7 +153,6 @@ public class RectifiedImage {
 
 		//Point2D vanishingPoint = new Point2D.Double(vectorX[0], vectorX[1]);
 		Point2D vanishingPoint = new Point2D.Double(vpX, 0);
-		System.out.println("VP: " + vanishingPoint.getX() + ", " + vanishingPoint.getY());
 
 		// Now it's time to transform the image
 		double parameter = (1/vanishingPoint.getX());
