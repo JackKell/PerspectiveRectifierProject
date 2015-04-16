@@ -14,11 +14,7 @@
    <children>
       <Pane layoutX="17.0" layoutY="27.0" prefHeight="130.0" prefWidth="255.0" style="-fx-border-color: rgba(0, 0, 0, .25); -fx-border-width: 3;">
          <children>
-            <ImageView fx:id="originalImageView" fitHeight="121.0" fitWidth="208.0" layoutX="53.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../../Pictures/test.jpg" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="originalImageView" fitHeight="122.0" fitWidth="247.0" layoutX="4.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
       <ImageView fx:id="rectifiedImageView" fitHeight="574.0" fitWidth="667.0" layoutX="304.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" />
@@ -36,7 +32,7 @@
       <Separator layoutY="201.0" prefHeight="0.0" prefWidth="293.0" />
       <AnchorPane layoutX="19.0" layoutY="218.0" prefHeight="370.0" prefWidth="255.0">
          <children>
-            <Slider fx:id="horizontalShiftSlider" focusTraversable="false" layoutY="298.0" majorTickUnit="100.0" max="1000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1000.0" minorTickCount="100" prefWidth="170.0" snapToTicks="true">
+            <Slider fx:id="horizontalShiftSlider" focusTraversable="false" layoutY="298.0" majorTickUnit="1.0" max="1000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1000.0" minorTickCount="1" prefWidth="170.0" snapToTicks="true">
                <padding>
                   <Insets left="5.0" />
                </padding>
@@ -64,7 +60,7 @@
                   <Insets left="5.0" />
                </padding>
             </TextField>
-            <Slider fx:id="verticalShiftSlider" focusTraversable="false" layoutY="248.0" majorTickUnit="100.0" max="1000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1000.0" minorTickCount="100" prefWidth="170.0" snapToTicks="true">
+            <Slider fx:id="verticalShiftSlider" focusTraversable="false" layoutY="248.0" majorTickUnit="1.0" max="1000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1000.0" minorTickCount="1" prefWidth="170.0" snapToTicks="true">
                <padding>
                   <Insets left="5.0" />
                </padding>
@@ -94,7 +90,7 @@
                   <Insets left="5.0" />
                </padding>
             </Slider>
-            <Slider fx:id="scaleSlider" blockIncrement="0.1" focusTraversable="false" layoutY="349.0" majorTickUnit="1.0" max="1.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1.0" minorTickCount="0" prefWidth="170.0" value="1.0">
+            <Slider fx:id="scaleSlider" blockIncrement="0.1" focusTraversable="false" layoutY="349.0" majorTickUnit="1.0" max="2.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-2.0" minorTickCount="0" prefWidth="170.0" value="1.0">
                <padding>
                   <Insets left="5.0" />
                </padding>

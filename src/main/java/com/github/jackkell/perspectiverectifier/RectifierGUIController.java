@@ -15,6 +15,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import util.MatrixSizeException;
@@ -25,7 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,224 +60,96 @@ public class RectifierGUIController implements Initializable {
 	public ToggleButton mirrorToggleButton;
 	public ToggleButton rectifyToggleButton;
 
-	public DecimalFormat dFormat = new DecimalFormat("####.000");
+	private final String TOGGLE_ON = "On";
+	private final String TOGGLE_OFF = "Off";
 
-
+	private final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("####.000");
+	private Map<Slider, TextField> sliders = new HashMap<>();
+	private Set<ToggleButton> toggleButtons = new HashSet<>();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		rectifyToggleButton.setSelected(false);
-		rectifyToggleButton.setText("Off");
+		sliders.put(rotationSlider, txtRotation);
+		sliders.put(vanishingPointXSlider, txtVPX);
+		sliders.put(verticalShearSlider, txtShear);
+		sliders.put(verticalShiftSlider, txtVerticalShift);
+		sliders.put(horizontalShiftSlider, txtHorizontalShift);
+		sliders.put(scaleSlider, txtScale);
 
-		mirrorToggleButton.setSelected(false);
-		mirrorToggleButton.setText("Off");
+		toggleButtons.add(rectifyToggleButton);
+		toggleButtons.add(mirrorToggleButton);
 
-		vanishingPointXSlider.setDisable(!rectifyToggleButton.isSelected());
-		txtVPX.setDisable(!rectifyToggleButton.isSelected());
+		for(ToggleButton toggleButton : toggleButtons) {
+			toggleButton.setSelected(false);
+			toggleButton.setText(TOGGLE_OFF);
+		}
 
-		verticalShearSlider.setDisable(!rectifyToggleButton.isSelected());
-		txtShear.setDisable(!rectifyToggleButton.isSelected());
+		txtRotation.setText(DECIMAL_FORMAT.format(rotationSlider.getValue()));
+		txtVPX.setText(DECIMAL_FORMAT.format(vanishingPointXSlider.getValue()));
+		txtShear.setText(DECIMAL_FORMAT.format(verticalShearSlider.getValue()));
+		txtVerticalShift.setText(DECIMAL_FORMAT.format(verticalShiftSlider.getValue()));
+		txtHorizontalShift.setText(DECIMAL_FORMAT.format(horizontalShiftSlider.getValue()));
+		txtScale.setText(DECIMAL_FORMAT.format(scaleSlider.getValue()));
 
-		verticalShiftSlider.setDisable(!rectifyToggleButton.isSelected());
-		txtVerticalShift.setDisable(!rectifyToggleButton.isSelected());
+		toggleSliders();
 
-		horizontalShiftSlider.setDisable(!rectifyToggleButton.isSelected());
-		txtHorizontalShift.setDisable(!rectifyToggleButton.isSelected());
+		for(Slider slider : sliders.keySet()) {
+			TextField textField = sliders.get(slider);
 
-		scaleSlider.setDisable(!rectifyToggleButton.isSelected());
-		txtScale.setDisable(!rectifyToggleButton.isSelected());
-
-		txtRotation.setText(Math.round(rotationSlider.getValue()) + "");
-		txtVPX.setText(dFormat.format(vanishingPointXSlider.getValue()));
-		txtShear.setText(dFormat.format(verticalShearSlider.getValue()));
-		txtVerticalShift.setText(dFormat.format(verticalShiftSlider.getValue()));
-		txtHorizontalShift.setText(dFormat.format(horizontalShiftSlider.getValue()));
-		txtScale.setText(dFormat.format(scaleSlider.getValue()) + "");
-
-        rotationSlider.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				txtRotation.setText(Math.round(rotationSlider.getValue()) + "");
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
-				}
-			}
-		});
-		txtRotation.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.ENTER) {
-					rotationSlider.setValue(Double.parseDouble(txtRotation.getText()));
+			// Sets the listeners for the sliders
+			slider.valueProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					textField.setText(DECIMAL_FORMAT.format(slider.getValue()));
 					if(Main.hasOriginalImage()) {
 						createRectifiedImage();
 						showRectifiedImage();
 					}
 				}
-			}
-		});
-
-		vanishingPointXSlider.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				txtVPX.setText(dFormat.format(vanishingPointXSlider.getValue()));
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
+			});
+			slider.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent event) {
+					if(event.getButton() == MouseButton.SECONDARY) {
+						slider.setValue(0);
+					}
 				}
-			}
-		});
-		txtVPX.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.ENTER) {
-					vanishingPointXSlider.setValue(Double.parseDouble(txtVPX.getText()));
+			});
+
+			// Sets the listeners for the text fields
+			textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+				@Override
+				public void handle(KeyEvent event) {
+					if(event.getCode() == KeyCode.ENTER) {
+						slider.setValue(Double.parseDouble(textField.getText()));
+						if(Main.hasOriginalImage()) {
+							createRectifiedImage();
+							showRectifiedImage();
+						}
+					}
+				}
+			});
+		}
+
+		// Sets the listeners for the toggle buttons
+		for(ToggleButton toggleButton : toggleButtons) {
+			toggleButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+					String toggleText = newValue ? TOGGLE_ON : TOGGLE_OFF;
+					toggleButton.setText(toggleText);
+
+					if(toggleButton == rectifyToggleButton) {
+						toggleSliders();
+					}
+
 					if(Main.hasOriginalImage()) {
 						createRectifiedImage();
 						showRectifiedImage();
 					}
 				}
-			}
-		});
-
-		verticalShearSlider.valueProperty().addListener((new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				txtShear.setText(dFormat.format(verticalShearSlider.getValue()));
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
-				}
-			}
-		}));
-		txtShear.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.ENTER) {
-					verticalShearSlider.setValue(Double.parseDouble(txtShear.getText()));
-					if(Main.hasOriginalImage()) {
-						createRectifiedImage();
-						showRectifiedImage();
-					}
-				}
-			}
-		});
-
-		verticalShiftSlider.valueProperty().addListener((new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				txtVerticalShift.setText(dFormat.format(verticalShiftSlider.getValue()));
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
-				}
-			}
-		}));
-		txtVerticalShift.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.ENTER) {
-					vanishingPointXSlider.setValue(Double.parseDouble(txtVerticalShift.getText()));
-					if(Main.hasOriginalImage()) {
-						createRectifiedImage();
-						showRectifiedImage();
-					}
-				}
-			}
-		});
-
-		horizontalShiftSlider.valueProperty().addListener((new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				txtHorizontalShift.setText(dFormat.format(horizontalShiftSlider.getValue()));
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
-				}
-			}
-		}));
-		txtHorizontalShift.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.ENTER) {
-					horizontalShiftSlider.setValue(Double.parseDouble(txtHorizontalShift.getText()));
-					if(Main.hasOriginalImage()) {
-						createRectifiedImage();
-						showRectifiedImage();
-					}
-				}
-			}
-		});
-
-		scaleSlider.valueProperty().addListener((new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				txtScale.setText(dFormat.format(scaleSlider.getValue()));
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
-				}
-			}
-		}));
-		txtScale.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.ENTER) {
-					scaleSlider.setValue(Double.parseDouble(txtScale.getText()));
-					if(Main.hasOriginalImage()) {
-						createRectifiedImage();
-						showRectifiedImage();
-					}
-				}
-			}
-		});
-
-		mirrorToggleButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue == true) {
-					mirrorToggleButton.setText("On");
-				} else {
-					mirrorToggleButton.setText("Off");
-				}
-
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
-				}
-			}
-		});
-
-		rectifyToggleButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue == true) {
-					rectifyToggleButton.setText("On");
-				} else {
-					rectifyToggleButton.setText("Off");
-				}
-
-				vanishingPointXSlider.setDisable(!rectifyToggleButton.isSelected());
-				txtVPX.setDisable(!rectifyToggleButton.isSelected());
-
-				verticalShearSlider.setDisable(!rectifyToggleButton.isSelected());
-				txtShear.setDisable(!rectifyToggleButton.isSelected());
-
-				verticalShiftSlider.setDisable(!rectifyToggleButton.isSelected());
-				txtVerticalShift.setDisable(!rectifyToggleButton.isSelected());
-
-				horizontalShiftSlider.setDisable(!rectifyToggleButton.isSelected());
-				txtHorizontalShift.setDisable(!rectifyToggleButton.isSelected());
-
-				scaleSlider.setDisable(!rectifyToggleButton.isSelected());
-				txtScale.setDisable(!rectifyToggleButton.isSelected());
-
-				if(Main.hasOriginalImage()) {
-					createRectifiedImage();
-					showRectifiedImage();
-				}
-			}
-		});
+			});
+		}
     }
 
     @FXML
@@ -285,8 +159,6 @@ public class RectifierGUIController implements Initializable {
 		fileChooser.setTitle("Open");
 		fileChooser.getExtensionFilters().addAll(
 				new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.jpeg")
-				//new FileChooser.ExtensionFilter("PNG File", "*.png"),
-				//new FileChooser.ExtensionFilter("JPEG File", "*.jpeg")
 		);
 
 		// Opens the file chooser and grabs the image the user selected
@@ -300,6 +172,10 @@ public class RectifierGUIController implements Initializable {
 
 		// Shows the path text and saves the original image in the program
 		originalImageView.setImage(originalImage);
+
+		// Centers the image in the tiny space it has
+		double imageViewOffset = originalImageView.getBoundsInParent().getWidth() / 2;
+		originalImageView.setLayoutX(128 - imageViewOffset);
 
 		createRectifiedImage();
 		showRectifiedImage();
@@ -332,6 +208,19 @@ public class RectifierGUIController implements Initializable {
             }
         }
     }
+
+	// Toggles all the sliders and text fields that need to be toggled
+	private void toggleSliders() {
+		for(Slider slider : sliders.keySet()) {
+			TextField textField = sliders.get(slider);
+
+			if(slider == rotationSlider)
+				continue;
+
+			slider.setDisable(!rectifyToggleButton.isSelected());
+			textField.setDisable(!rectifyToggleButton.isSelected());
+		}
+	}
 
     private void createRectifiedImage() {
 		RectifiedImage.Builder builder = new RectifiedImage.Builder(Main.getOriginalImage())

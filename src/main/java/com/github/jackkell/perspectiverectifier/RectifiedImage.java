@@ -151,9 +151,6 @@ public class RectifiedImage {
 		PixelReader reader = image.getPixelReader();
 		PixelWriter writer = newImage.getPixelWriter();
 
-		// We want to origin to be centered to make the math easier
-		Point2D origin = new Point2D.Double(width / 2.0, height / 2.0);
-
 		//Point2D vanishingPoint = new Point2D.Double(vectorX[0], vectorX[1]);
 		Point2D vanishingPoint = new Point2D.Double(vpX, 0);
 		System.out.println("VP: " + vanishingPoint.getX() + ", " + vanishingPoint.getY());
