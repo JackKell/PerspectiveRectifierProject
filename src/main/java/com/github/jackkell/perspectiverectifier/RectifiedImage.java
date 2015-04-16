@@ -1,12 +1,10 @@
 package com.github.jackkell.perspectiverectifier;
 
-import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import util.Matrix;
 import util.MatrixSizeException;
 
@@ -14,8 +12,10 @@ import java.awt.geom.Point2D;
 
 public class RectifiedImage {
 	private final Image originalImage; // Required
-	private final Point2D[] points; // Required
-	private final RectifiedImage.Mode mode;
+
+	private final boolean mirror;
+	private final boolean changePerspective;
+
 	private final double rotation;
 	private final double vpX;
 	private final double shear;
@@ -27,8 +27,10 @@ public class RectifiedImage {
 
 	private RectifiedImage(RectifiedImage.Builder builder) {
 		this.originalImage = builder.originalImage;
-		this.points = builder.points;
-		this.mode = builder.mode;
+
+		this.mirror = builder.mirror;
+		this.changePerspective = builder.changePerspective;
+
 		this.rotation = builder.rotation;
 		this.vpX = builder.vpX;
 		this.shear = builder.shear;
@@ -47,18 +49,13 @@ public class RectifiedImage {
 		// Copy the original image
 		WritableImage newImage = copy(originalImage);
 
-		// Changes the image based on the mode
-		switch(mode) {
-			case MIRROR:
-				//newImage = mirror(newImage);
-				break;
-		}
-
 		newImage = rotate(newImage);
 
-		//if(points[0] != null) {
-			newImage = changePerspective2(newImage);
-		//}
+		if(mirror)
+			newImage = mirror(newImage);
+
+		if(changePerspective)
+			newImage = changePerspective(newImage);
 
 		return newImage;
 	}
@@ -157,110 +154,8 @@ public class RectifiedImage {
 		// We want to origin to be centered to make the math easier
 		Point2D origin = new Point2D.Double(width / 2.0, height / 2.0);
 
-		//Convert point coordinates so the origin is in the center of the image
-		Point2D[] offsetPoints = new Point2D.Double[points.length];
-		for(int i = 0; i < points.length; i++) {
-			Point2D point = points[i];
-			offsetPoints[i] = new Point2D.Double(point.getX() - origin.getX(), point.getY() - origin.getY());
-		}
-
-		Matrix matrixA = new Matrix(8, 8, new double[] {
-				points[0].getX(), points[0].getY(), 1, 0, 0, 0, 0, 0,
-				points[3].getX(), points[3].getY(), 1, 0, 0, 0, 0, 0,
-				points[1].getX(), points[1].getY(), 1, 0, 0, 0, -points[1].getX(), -points[1].getY(),
-				0, 0, 0, points[0].getX(), points[0].getY(), 1, 0, 0,
-				0, 0, 0, points[1].getX(), points[1].getY(), 1, 0, 0,
-				0, 0, 0, points[2].getX(), points[2].getY(), 1, -points[2].getX(), -points[2].getY(),
-				0, 0, 0, points[3].getX(), points[3].getY(), 1, -points[3].getX(), -points[3].getY(),
-				points[2].getX(), points[2].getY(), 1, 0, 0, 0, -points[2].getX(), -points[2].getY()
-		});
-
-		double[] vectorB = new double[] {0, 0, 1, 0, 0, 1, 1, 1};
-		double[] vectorX = new double[0];
-
-		try {
-			vectorX = matrixA.LUFactorize(vectorB);
-		} catch(MatrixSizeException e) {
-			System.out.println("[ERROR changePerspective_001]");
-			e.printStackTrace();
-		}
-
-		double[] newVectorX = new double[vectorX.length + 1];
-		newVectorX[0] = vectorX[0];
-		newVectorX[1] = vectorX[2];
-		newVectorX[2] = vectorX[7];
-		newVectorX[3] = vectorX[1];
-		newVectorX[4] = vectorX[3];
-		newVectorX[5] = vectorX[4];
-		newVectorX[6] = vectorX[5];
-		newVectorX[7] = vectorX[6];
-		newVectorX[8] = 1;
-
-		Matrix matrixH = new Matrix(3, 3, newVectorX);
-
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				Color trueColor = reader.getColor(x, y);
-				Matrix pixelCoord = new Matrix(3, 1, new double[] {x, y, 1});
-				double[] newCoords = new double[0];
-				try {
-					newCoords = matrixH.multiply(pixelCoord).getElements();
-				} catch(MatrixSizeException e) {
-					System.out.println("[ERROR changePerspective_002]");
-					e.printStackTrace();
-				}
-
-				double x1 = (newCoords[0] / newCoords[2]);
-				double y1 = (newCoords[1] / newCoords[2]);
-
-				if(x1 < 0 || y1 < 0 || x1 > originalImage.getWidth() || y1 > originalImage.getHeight())
-					continue;
-
-				writer.setColor((int ) x1, (int) y1, trueColor);
-			}
-		}
-		
-		return newImage;
-	}
-
-	private WritableImage changePerspective2(WritableImage image) {
-		double width = image.getWidth();
-		double height = image.getHeight();
-
-		WritableImage newImage = new WritableImage((int) width, (int) height);
-		PixelReader reader = image.getPixelReader();
-		PixelWriter writer = newImage.getPixelWriter();
-
-		// We want to origin to be centered to make the math easier
-		Point2D origin = new Point2D.Double(width / 2.0, height / 2.0);
-		/*
-		//Convert point coordinates so the origin is in the center of the image
-		Point2D[] offsetPoints = new Point2D.Double[points.length];
-		for(int i = 0; i < points.length; i++) {
-			Point2D point = points[i];
-			offsetPoints[i] = new Point2D.Double(point.getX() - origin.getX(), point.getY() - origin.getY());
-		}
-		
-		// This helps us get the elements for our matrix
-		double topSlope = (offsetPoints[1].getY() - offsetPoints[0].getY()) / (offsetPoints[1].getX() - offsetPoints[0].getX());
-		double bottomSlope = (offsetPoints[3].getY() - offsetPoints[2].getY()) / (offsetPoints[3].getX() - offsetPoints[2].getX());
-
-		double topYInt = offsetPoints[0].getY() + (offsetPoints[0].getX() * topSlope * -1);
-		double bottomYInt = offsetPoints[3].getY() + (offsetPoints[3].getX() * bottomSlope * -1);
-
-		// Once we solve the matrix, we have the point where the 2 lines intercept
-		Matrix matrixA = new Matrix(2, 2, new double[] {-topSlope, 1, -bottomSlope, 1});
-		double[] vectorB = new double[] {topYInt, bottomYInt};
-		double[] vectorX = null;
-		try {
-			vectorX = Matrix.solveSystem(matrixA, vectorB);
-		} catch(MatrixSizeException e) {
-			System.out.println("[ERROR changePerspective2_001]");
-			e.printStackTrace();
-		}
-		*/
 		//Point2D vanishingPoint = new Point2D.Double(vectorX[0], vectorX[1]);
-		Point2D vanishingPoint = new Point2D.Double(vpX  + origin.getX(), 0);
+		Point2D vanishingPoint = new Point2D.Double(vpX, 0);
 		System.out.println("VP: " + vanishingPoint.getX() + ", " + vanishingPoint.getY());
 
 		// Now it's time to transform the image
@@ -299,8 +194,10 @@ public class RectifiedImage {
 
 	public static class Builder {
 		private final Image originalImage;
-		private Point2D[] points;
-		private RectifiedImage.Mode mode;
+
+		private boolean mirror;
+		private boolean changePerspective;
+
 		private double rotation;
 		private double vpX;
 		private double shear;
@@ -310,15 +207,17 @@ public class RectifiedImage {
 
 		public Builder(Image image) {
 			this.originalImage = image;
+			mirror = false;
+			changePerspective = false;
 		}
 
-		public Builder points(Point2D[] points) {
-			this.points = points;
+		public Builder mirror() {
+			this.mirror = true;
 			return this;
 		}
 
-		public Builder mode(RectifiedImage.Mode mode) {
-			this.mode = mode;
+		public Builder changePerspective() {
+			this.changePerspective = true;
 			return this;
 		}
 
@@ -355,12 +254,5 @@ public class RectifiedImage {
 		public RectifiedImage build() {
 			return new RectifiedImage(this);
 		}
-	}
-
-	public enum Mode {
-		NONE,
-		MIRROR,
-		RANDOM_COLOR,
-		TINTED_GREEN
 	}
 }

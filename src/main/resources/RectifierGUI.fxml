@@ -10,125 +10,138 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="502.0" prefWidth="982.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.jackkell.perspectiverectifier.RectifierGUIController">
+<AnchorPane fx:id="parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="611.0" prefWidth="982.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.jackkell.perspectiverectifier.RectifierGUIController">
    <children>
-      <ImageView fx:id="originalImageView" fitHeight="129.0" fitWidth="150.0" layoutX="14.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../Pictures/test.jpg" />
-         </image></ImageView>
-      <ImageView fx:id="rectifiedImageView" fitHeight="455.0" fitWidth="600.0" layoutX="372.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="browseButton" layoutX="60.0" layoutY="182.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" prefHeight="25.0" prefWidth="98.0" text="Browse Image" />
-      <Button fx:id="exportButton" layoutX="170.0" layoutY="182.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="98.0" text="Export Image" />
-      <ToggleButton fx:id="mirrorToggleButton" layoutX="60.0" layoutY="225.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="98.0" text="Mirror" />
-      <ToggleButton fx:id="rectifyToggleButton" layoutX="170.0" layoutY="225.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="98.0" text="Rectify" />
-      <GridPane layoutX="14.0" layoutY="250.0" prefHeight="238.0" prefWidth="326.0">
-        <columnConstraints>
-            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="0.0" prefWidth="60.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="0.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="0.0" prefWidth="60.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="40.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="40.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <Pane layoutX="17.0" layoutY="27.0" prefHeight="130.0" prefWidth="255.0" style="-fx-border-color: rgba(0, 0, 0, .25); -fx-border-width: 3;">
          <children>
-            <Label text="Rotation">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Label>
-            <Slider fx:id="vanishingPointXSlider" majorTickUnit="1000.0" max="10000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-10000.0" minorTickCount="100" prefWidth="200.0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Slider>
-            <TextField fx:id="txtVPX" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </TextField>
-            <TextField fx:id="txtShear" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </TextField>
-            <TextField fx:id="txtVerticalShift" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </TextField>
-            <TextField fx:id="txtHorizontalShift" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </TextField>
-            <TextField fx:id="txtScale" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </TextField>
-            <Slider fx:id="verticalShearSlider" blockIncrement="0.1" majorTickUnit="1.0" max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-10.0" minorTickCount="2" prefWidth="200.0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Slider>
-            <Slider fx:id="verticalShiftSlider" blockIncrement="0.1" majorTickUnit="5.0" max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-10.0" minorTickCount="1" prefWidth="200.0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Slider>
-            <Slider fx:id="horizontalShiftSlider" blockIncrement="0.1" max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-10.0" minorTickCount="5" prefWidth="200.0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Slider>
-            <Slider fx:id="scaleSlider" blockIncrement="0.1" max="1.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1.0" prefWidth="200.0" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Slider>
-            <Label text="Vanishing Point X" wrapText="true" GridPane.rowIndex="1">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Label>
-            <Label text="Vertical Shear" wrapText="true" GridPane.rowIndex="2">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Label>
-            <Label layoutX="10.0" layoutY="139.0" text="Vertical Shift" wrapText="true" GridPane.rowIndex="3">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Label>
-            <Label layoutX="10.0" layoutY="193.0" text="Horizontal Shift" wrapText="true" GridPane.rowIndex="4">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Label>
-            <Label layoutX="10.0" layoutY="247.0" text="Scale" GridPane.rowIndex="5">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Label>
-            <TextField fx:id="txtRotation" alignment="CENTER" layoutX="270.0" layoutY="43.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="0" GridPane.columnIndex="2" GridPane.halignment="CENTER">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </TextField>
-            <Slider fx:id="rotationSlider" blockIncrement="1.0" majorTickUnit="90.0" max="359.0" maxHeight="-Infinity" maxWidth="-Infinity" minorTickCount="5" prefWidth="200.0" snapToTicks="true" GridPane.columnIndex="1">
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </Slider>
+            <ImageView fx:id="originalImageView" fitHeight="121.0" fitWidth="208.0" layoutX="53.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../Pictures/test.jpg" />
+               </image>
+            </ImageView>
          </children>
-      </GridPane>
-      <Label layoutX="14.0" layoutY="14.0" text="Original Image" />
-      <Label layoutX="372.0" layoutY="14.0" text="Transformed Preview" />
+      </Pane>
+      <ImageView fx:id="rectifiedImageView" fitHeight="574.0" fitWidth="667.0" layoutX="304.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="browseButton" focusTraversable="false" layoutX="28.0" layoutY="162.0" mnemonicParsing="false" onAction="#onBrowseButtonClick" prefHeight="25.0" prefWidth="114.0" text="Browse Image" />
+      <Button fx:id="exportButton" focusTraversable="false" layoutX="151.0" layoutY="162.0" mnemonicParsing="false" onAction="#onExportButtonClick" prefHeight="25.0" prefWidth="114.0" text="Export Image" />
+      <Label focusTraversable="false" layoutX="102.0" text="Original Image">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding></Label>
+      <Label focusTraversable="false" layoutX="304.0" text="Transformed Preview">
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding></Label>
+      <Separator layoutX="292.0" orientation="VERTICAL" prefHeight="611.0" prefWidth="5.0" />
+      <Separator layoutY="201.0" prefHeight="0.0" prefWidth="293.0" />
+      <AnchorPane layoutX="19.0" layoutY="218.0" prefHeight="370.0" prefWidth="255.0">
+         <children>
+            <Slider fx:id="horizontalShiftSlider" focusTraversable="false" layoutY="298.0" majorTickUnit="100.0" max="1000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1000.0" minorTickCount="100" prefWidth="170.0" snapToTicks="true">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Slider>
+            <Label focusTraversable="false" layoutY="70.0" text="Rotation">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+            <TextField fx:id="txtHorizontalShift" alignment="CENTER" focusTraversable="false" layoutX="180.0" layoutY="293.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="75.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+            <TextField fx:id="txtRotation" alignment="CENTER" focusTraversable="false" layoutX="180.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="75.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+            <TextField fx:id="txtShear" alignment="CENTER" focusTraversable="false" layoutX="180.0" layoutY="193.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="75.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+            <Slider fx:id="verticalShiftSlider" focusTraversable="false" layoutY="248.0" majorTickUnit="100.0" max="1000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1000.0" minorTickCount="100" prefWidth="170.0" snapToTicks="true">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Slider>
+            <Label focusTraversable="false" layoutY="270.0" text="Horizontal Shift" wrapText="true">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="txtVPX" alignment="CENTER" focusTraversable="false" layoutX="180.0" layoutY="143.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="75.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+            <Slider fx:id="vanishingPointXSlider" blockIncrement="1.0" focusTraversable="false" layoutY="148.0" majorTickUnit="1000.0" max="1000.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1000.0" minorTickCount="100" prefWidth="170.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Slider>
+            <Label focusTraversable="false" layoutY="321.0" text="Scale">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <Slider fx:id="rotationSlider" blockIncrement="1.0" focusTraversable="false" layoutY="98.0" majorTickUnit="90.0" max="360.0" maxHeight="-Infinity" maxWidth="-Infinity" minorTickCount="5" prefWidth="170.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Slider>
+            <Slider fx:id="scaleSlider" blockIncrement="0.1" focusTraversable="false" layoutY="349.0" majorTickUnit="1.0" max="1.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-1.0" minorTickCount="0" prefWidth="170.0" value="1.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Slider>
+            <Slider fx:id="verticalShearSlider" blockIncrement="0.1" focusTraversable="false" layoutY="198.0" majorTickUnit="1.0" max="10.0" maxHeight="-Infinity" maxWidth="-Infinity" min="-10.0" minorTickCount="2" prefWidth="170.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Slider>
+            <TextField fx:id="txtVerticalShift" alignment="CENTER" focusTraversable="false" layoutX="180.0" layoutY="243.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="75.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+            <TextField fx:id="txtScale" alignment="CENTER" focusTraversable="false" layoutX="180.0" layoutY="344.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="75.0">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </TextField>
+            <Label focusTraversable="false" layoutY="170.0" text="Vertical Shear" wrapText="true">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label focusTraversable="false" layoutY="220.0" text="Vertical Shift" wrapText="true">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label focusTraversable="false" layoutY="120.0" text="Vanishing Point X" wrapText="true">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <ToggleButton fx:id="mirrorToggleButton" focusTraversable="false" layoutX="178.0" layoutY="31.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Off" />
+            <ToggleButton fx:id="rectifyToggleButton" focusTraversable="false" layoutX="178.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Off" />
+            <Label layoutX="1.0" text="Rectify">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label layoutX="1.0" layoutY="30.0" text="Mirror">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </Label>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

@@ -47,6 +47,10 @@ public class Main extends Application {
 		Main.originalImage = originalImage;
 	}
 
+    public static boolean hasOriginalImage() {
+        return originalImage != null;
+    }
+
     public static RectifiedImage getRectifiedImage() {
         return Main.rectifiedImage;
     }
